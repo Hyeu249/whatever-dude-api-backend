@@ -41,10 +41,6 @@ async function server({ argv }) {
     app.use(cors());
     app.use(morgan.middleware());
 
-    app.get("/", (req, res) => {
-      res.send("Hello, Express!");
-    });
-
     //start server
     app.listen(listenPort, () => {
       log.info("Server is up on port " + listenPort);
