@@ -4,6 +4,7 @@ const cors = require("cors");
 const yargs = require("@server/lib/yargs");
 const morgan = require("@server/lib/morgan");
 const log = require("@server/lib/log");
+const sequelize = require("@server/lib/sequelize");
 
 const version = require("./version");
 version.use("1.0.0");
@@ -33,6 +34,18 @@ async function server({ argv }) {
     if (debug) {
       log.setLevel(log.DebugLevel);
     }
+    //start db
+    var [sequelizeDb, err] = await sequelize.open(dbType, dbStr);
+    if (err !== null) {
+      throw new Error(err);
+    }
+
+    // Run the auto migration tool.
+    var err = sequelize.schema.create(sequelizeDb);
+    if (err !== null) {
+      throw new Error(err);
+    }
+
     // Create a new http server via express.
     const app = express();
 
@@ -48,6 +61,6 @@ async function server({ argv }) {
 
     // const closeDb = await sequelizeDb.close();
   } catch (error) {
-    log.error("error from the app:", error);
+    log.error("crash the app:", error);
   }
 }
