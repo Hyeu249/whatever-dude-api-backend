@@ -13,7 +13,7 @@ async function register(db, body) {
 
   try {
     // Check if username already exist
-    var [isEmailExist, err] = await repo.userRepo.isEmailExist(tx, body.user_name);
+    var [isEmailExist, err] = await repo.userRepo.isEmailExist(tx, body.email);
     if (err !== null) {
       throw new Error(err);
     }
