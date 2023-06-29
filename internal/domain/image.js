@@ -14,7 +14,6 @@ const imageUploadRequest = {
     type: types.STRING,
     validate: ["required"],
   },
-
   description: {
     type: types.STRING,
     validate: [],
