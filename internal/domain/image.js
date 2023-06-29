@@ -6,7 +6,6 @@ const domains = {
   msgImageDownloadSuccess: "Download image successfully.",
   msgImageDeleteSuccess: "Delete image successfully.",
 
-  imageLocationisNotFound: "Image location is not found.",
   imageIsNotFound: "Image is not found.",
 };
 
