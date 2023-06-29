@@ -48,6 +48,7 @@ async function register(req, res) {
 
     return res.status(OK).send({ message: domain.msgUserRegisterSuccess });
   } catch (error) {
+    console.log("error: ", error);
     return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
   }
 }

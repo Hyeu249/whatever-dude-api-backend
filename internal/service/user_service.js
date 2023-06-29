@@ -8,7 +8,7 @@ module.exports = {
 };
 
 async function register(db, body) {
-  log.Service("Start USER register Service");
+  log.service("Start USER register Service");
   const tx = await db.transaction();
 
   try {
@@ -28,13 +28,13 @@ async function register(db, body) {
     }
 
     await tx.commit();
-    log.Service("Finish USER register Service");
+    log.service("Finish USER register Service");
     return null;
   } catch (error) {
     await tx.rollback();
     const parseError = help.parseErrorMessage(error.message);
 
-    log.Error("Finish USER register Service with error", error);
+    log.error("Finish USER register Service with error", error);
     return parseError;
   }
 }
