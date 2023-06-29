@@ -1,4 +1,4 @@
-const Sequelize = require("@server/lib/sequelize");
+const { Images } = require("@server/lib/sequelize/images");
 const { Op } = require("sequelize");
 
 const log = require("@server/lib/log");
@@ -14,7 +14,7 @@ module.exports = {
 async function insertNewImage(tx, body, user_id) {
   log.repo("Start IMAGE Repo insertNewImage");
   try {
-    const _ = await Sequelize.Image.create(
+    const _ = await Images.create(
       {
         name: body.name,
         description: body.description,
@@ -40,7 +40,7 @@ async function updateImage(tx, body, image_id) {
     if (body.name !== undefined) data.name = body.name;
     if (body.description !== undefined) data.description = body.description;
 
-    const _ = await Sequelize.Image.update(data, { where: { id: image_id }, transaction: tx });
+    const _ = await Images.update(data, { where: { id: image_id }, transaction: tx });
 
     log.repo("Finish IMAGE Repo updateImage");
     return null;
@@ -64,7 +64,7 @@ async function getImageList(tx, body) {
   if (body.description !== undefined) conditions.description = { [Op.like]: "%" + body.description + "%" };
 
   try {
-    const images = await Sequelize.Image.findAndCountAll(
+    const images = await Images.findAndCountAll(
       {
         where: conditions,
         offset: Number(offset),
@@ -85,7 +85,7 @@ async function detroyImage(tx, image_id) {
   log.repo("Start IMAGE Repo detroyImage");
 
   try {
-    const _ = await Sequelize.Image.destroy(
+    const _ = await Images.destroy(
       {
         where: {
           id: image_id,
@@ -106,7 +106,7 @@ async function isImageExist(tx, image_id) {
   log.repo("Start IMAGE Repo isImageExist");
 
   try {
-    const count = await Sequelize.Image.count(
+    const count = await Images.count(
       {
         where: {
           id: image_id,

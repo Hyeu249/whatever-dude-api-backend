@@ -65,6 +65,7 @@ async function server({ argv }) {
     app.use(morgan.middleware());
 
     app.use(http.attachUserServiceHTTPHandler(sequelizeDb));
+    app.use(http.attachImageServiceHTTPHandler(sequelizeDb));
     app.use(...middleware);
 
     //start server

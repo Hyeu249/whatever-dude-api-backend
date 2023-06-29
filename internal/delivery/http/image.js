@@ -17,7 +17,7 @@ function attachImageServiceHTTPHandler(db) {
   const g = "/images";
 
   router.get(g + "", getImageList.bind({ db }));
-  router.post(g + "/printing", multer.StoreImageToLocal(), createImage.bind({ db }));
+  router.post(g + "", multer.storeImageToLocal(), createImage.bind({ db }));
   router.patch(g + "/:id", updateImage.bind({ db }));
   router.delete(g + "/:id", deleteImage.bind({ db }));
 
