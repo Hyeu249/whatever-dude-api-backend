@@ -26,31 +26,24 @@ async function createImage(db, body, user_id) {
     return null;
   } catch (error) {
     await tx.rollback();
-    const parseError = help.ParseErrorMessage(error.message);
+    const parseError = help.parseErrorMessage(error.message);
 
     log.Error("Finish IMAGE createImage Service with error", error);
     return parseError;
   }
 }
 
-async function updateImage(db, body, image_id, user_id) {
+async function updateImage(db, body, image_id) {
   log.Service("Start IMAGE updateImage Service");
   const tx = await db.transaction();
 
   try {
-    var [isImageExist, err] = await repo.imageRepo.IsImageExist(tx, image_id);
+    var [isImageExist, err] = await repo.imageRepo.isImageExist(tx, image_id);
     if (err !== null) {
       throw new Error(err);
     }
     if (!isImageExist) {
-      throw new Error(domain.ImageIsNotFound);
-    }
-    var [isThisUserOwned, err] = await repo.imageRepo.IsThisUserOwned(tx, image_id, user_id);
-    if (err !== null) {
-      throw new Error(err);
-    }
-    if (!isThisUserOwned) {
-      throw new Error(domain.ThisUserIsNotTheOwner);
+      throw new Error(domain.imageIsNotFound);
     }
 
     //insert new image
@@ -64,7 +57,7 @@ async function updateImage(db, body, image_id, user_id) {
     return null;
   } catch (error) {
     await tx.rollback();
-    const parseError = help.ParseErrorMessage(error.message);
+    const parseError = help.parseErrorMessage(error.message);
 
     log.Error("Finish IMAGE updateImage Service with error", error);
     return parseError;
@@ -76,17 +69,6 @@ async function getImageList(db, body, user_id) {
   const tx = await db.transaction();
 
   try {
-    //check id
-    if (body.image_id !== undefined) {
-      var [isImageExist, err] = await repo.imageRepo.IsImageExist(tx, body.image_id);
-      if (err !== null) {
-        throw new Error(err);
-      }
-      if (!isImageExist) {
-        throw new Error(domain.ImageIsNotFound);
-      }
-    }
-
     //get images
     var [images, err] = await repo.imageRepo.getImageList(tx, body, user_id);
     if (err !== null) {
@@ -98,7 +80,7 @@ async function getImageList(db, body, user_id) {
     return [images, null];
   } catch (error) {
     await tx.rollback();
-    const parseError = help.ParseErrorMessage(error.message);
+    const parseError = help.parseErrorMessage(error.message);
 
     log.Error("Finish IMAGE getImageList Service with error", error);
     return [null, parseError];
@@ -111,24 +93,16 @@ async function deleteImage(db, image_id, user_id) {
 
   try {
     //check id
-    var [isImageExist, err] = await repo.imageRepo.IsImageExist(tx, image_id);
+    var [isImageExist, err] = await repo.imageRepo.isImageExist(tx, image_id);
     if (err !== null) {
       throw new Error(err);
     }
     if (!isImageExist) {
-      throw new Error(domain.ImageIsNotFound);
-    }
-
-    var [isThisUserOwned, err] = await repo.imageRepo.IsThisUserOwned(tx, image_id, user_id);
-    if (err !== null) {
-      throw new Error(err);
-    }
-    if (!isThisUserOwned) {
-      throw new Error(domain.ThisUserIsNotTheOwner);
+      throw new Error(domain.imageIsNotFound);
     }
 
     //detroy new image
-    var err = await repo.imageRepo.DetroyImage(tx, image_id);
+    var err = await repo.imageRepo.detroyImage(tx, image_id);
     if (err !== null) {
       throw new Error(err);
     }
@@ -138,7 +112,7 @@ async function deleteImage(db, image_id, user_id) {
     return null;
   } catch (error) {
     await tx.rollback();
-    const parseError = help.ParseErrorMessage(error.message);
+    const parseError = help.parseErrorMessage(error.message);
 
     log.Error("Finish IMAGE deleteImage Service with error", error);
     return parseError;

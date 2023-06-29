@@ -43,10 +43,6 @@ const imageUpdateRequest = {
 };
 
 const imageListRequest = {
-  image_id: {
-    type: types.STRING,
-    validate: [],
-  },
   offset: {
     type: types.STRING,
     validate: [],
