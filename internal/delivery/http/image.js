@@ -95,7 +95,7 @@ async function updateImage(req, res) {
     const image_id = req.params.id;
 
     //validate struct
-    var [body, err] = validator.bind(req.body, domain.ImageUpdateRequest).validateStruct().parse();
+    var [body, err] = validator.bind(req.body, domain.imageUpdateRequest).validateStruct().parse();
     if (err !== null) {
       switch (err) {
         case domain.malformedJSONErrResMsg:
@@ -107,13 +107,11 @@ async function updateImage(req, res) {
       }
     }
     //service
-    var err = await service.imageService.updateImage(db, body, image_id, req.user_id);
+    var err = await service.imageService.updateImage(db, body, image_id);
     if (err !== null) {
       switch (err) {
         case domain.imageIsNotFound:
           return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
-        case domain.thisUserIsNotTheOwner:
-          return res.status(BAD_REQUEST).send({ message: domain.thisUserIsNotTheOwner });
         default:
           return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }
@@ -147,8 +145,6 @@ async function deleteImage(req, res) {
       switch (err) {
         case domain.imageIsNotFound:
           return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
-        case domain.thisUserIsNotTheOwner:
-          return res.status(BAD_REQUEST).send({ message: domain.thisUserIsNotTheOwner });
         default:
           return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }
