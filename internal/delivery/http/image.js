@@ -49,7 +49,7 @@ async function createImage(req, res) {
       }
     }
 
-    return res.status(OK).send({ message: domain.MsgImageUploadSuccess });
+    return res.status(OK).send({ message: domain.msgImageUploadSuccess });
   } catch (error) {
     return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
   }
