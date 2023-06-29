@@ -1,79 +1,72 @@
-const dataTypes = require("@server/lib/dataTypes");
+const types = require("@server/lib/types");
 
-const Var = {
-  MsgImageUploadSuccess: "Upload image successfully.",
-  MsgImageUpdateSuccess: "Update image successfully.",
-  MsgImageDownloadSuccess: "Download image successfully.",
-  MsgImageDeleteSuccess: "Delete image successfully.",
+const domains = {
+  msgImageUploadSuccess: "Upload image successfully.",
+  msgImageUpdateSuccess: "Update image successfully.",
+  msgImageDownloadSuccess: "Download image successfully.",
+  msgImageDeleteSuccess: "Delete image successfully.",
 
-  ImageLocationIsNotFound: "Image location is not found.",
-  ImageIsNotFound: "Image is not found.",
-  ThisIsNotSampleImage: "This is not sample image.",
-  ThisIsNotPrintingImage: "This is not printing image.",
-  ThisUserIsNotTheOwner: "This user is not the owner.",
+  imageLocationisNotFound: "Image location is not found.",
+  imageIsNotFound: "Image is not found.",
 };
 
-const ImageUploadRequest = {
+const imageUploadRequest = {
   name: {
-    type: dataTypes.STRING,
+    type: types.STRING,
     validate: ["required"],
   },
 
   description: {
-    type: dataTypes.STRING,
+    type: types.STRING,
     validate: [],
   },
-  file_extention: {
-    type: dataTypes.STRING,
+  extention: {
+    type: types.STRING,
     validate: ["required"],
   },
   location: {
-    type: dataTypes.STRING,
+    type: types.STRING,
     validate: ["required"],
   },
 };
 
-const ImageUpdateRequest = {
+const imageUpdateRequest = {
   name: {
-    type: dataTypes.STRING,
+    type: types.STRING,
     validate: [],
   },
 
   description: {
-    type: dataTypes.STRING,
+    type: types.STRING,
     validate: [],
   },
 };
 
-const ImageListRequest = {
+const imageListRequest = {
   image_id: {
-    type: dataTypes.STRING,
+    type: types.STRING,
     validate: [],
   },
   offset: {
-    type: dataTypes.STRING,
+    type: types.STRING,
     validate: [],
   },
   limit: {
-    type: dataTypes.STRING,
+    type: types.STRING,
     validate: [],
   },
   name: {
-    type: dataTypes.STRING,
+    type: types.STRING,
     validate: [],
   },
   description: {
-    type: dataTypes.STRING,
-    validate: [],
-  },
-  type: {
-    type: dataTypes.STRING,
+    type: types.STRING,
     validate: [],
   },
 };
 
-const ImageDeleteRequest = {
-  id: { type: dataTypes.STRING, validate: ["required"] },
+const imageDeleteRequest = {
+  id: { type: types.STRING, validate: ["required"] },
 };
 
-module.exports = { ...Var, ImageUploadRequest, ImageUpdateRequest, ImageListRequest, ImageDeleteRequest };
+module.exports = { ...domains, imageUploadRequest, imageUpdateRequest, imageListRequest, imageDeleteRequest };

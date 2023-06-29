@@ -1,7 +1,7 @@
 const express = require("express");
 const { StatusCodes } = require("http-status-codes");
 
-const Service = require("@server/internal/service");
+const service = require("@server/internal/service");
 const domain = require("@server/internal/domain");
 const validator = require("@server/lib/validator");
 const multer = require("@server/lib/multer");
@@ -9,9 +9,9 @@ const multer = require("@server/lib/multer");
 const { OK, BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
 
 // module.exports = router;
-module.exports = { AttachImageServiceHTTPHandler };
+module.exports = { attachImageServiceHTTPHandler };
 
-function AttachImageServiceHTTPHandler(db) {
+function attachImageServiceHTTPHandler(db) {
   const router = new express.Router();
 
   const g = "/images";
@@ -29,29 +29,29 @@ async function createImage(req, res) {
 
   try {
     //validate struct
-    var [body, err] = validator.Bind(req.body, domain.ImageUploadRequest).ValidateStruct().Parse();
+    var [body, err] = validator.bind(req.body, domain.imageUploadRequest).validateStruct().parse();
     if (err !== null) {
       switch (err) {
-        case domain.MalformedJSONErrResMsg:
-          return res.status(BAD_REQUEST).send({ message: domain.MalformedJSONErrResMsg });
+        case domain.malformedJSONErrResMsg:
+          return res.status(BAD_REQUEST).send({ message: domain.malformedJSONErrResMsg });
         case domain.validationFailureErrResMsg:
           return res.status(BAD_REQUEST).send({ message: domain.validationFailureErrResMsg });
         default:
-          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalErorAtValidation });
+          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalErorAtValidation });
       }
     }
     //service
-    var err = await Service.ImageService.CreatePrintingImage(db, body, req.user_id);
+    var err = await service.imageService.createImage(db, body, req.user_id);
     if (err !== null) {
       switch (err) {
         default:
-          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalServerError });
+          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }
     }
 
     return res.status(OK).send({ message: domain.MsgImageUploadSuccess });
   } catch (error) {
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalServerError });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
   }
 }
 
@@ -60,31 +60,31 @@ async function getImageList(req, res) {
 
   try {
     //validate struct
-    var [body, err] = validator.Bind(req.query, domain.ImageListRequest).ValidateStruct().Parse();
+    var [body, err] = validator.bind(req.query, domain.imageListRequest).validateStruct().parse();
     if (err !== null) {
       switch (err) {
-        case domain.MalformedJSONErrResMsg:
-          return res.status(BAD_REQUEST).send({ message: domain.MalformedJSONErrResMsg });
+        case domain.malformedJSONErrResMsg:
+          return res.status(BAD_REQUEST).send({ message: domain.malformedJSONErrResMsg });
         case domain.validationFailureErrResMsg:
           return res.status(BAD_REQUEST).send({ message: domain.validationFailureErrResMsg });
         default:
-          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalErorAtValidation });
+          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalErorAtValidation });
       }
     }
     //service
-    var [images, err] = await Service.ImageService.GetImageList(db, body, req.user_id);
+    var [images, err] = await service.imageService.GetImageList(db, body, req.user_id);
     if (err !== null) {
       switch (err) {
-        case domain.ImageIsNotFound:
-          return res.status(NOT_FOUND).send({ message: domain.ImageIsNotFound });
+        case domain.imageIsNotFound:
+          return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
         default:
-          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalServerError });
+          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }
     }
 
-    return res.status(OK).send({ message: domain.MsgImageDownloadSuccess, result: images });
+    return res.status(OK).send({ message: domain.msgImageDownloadSuccess, result: images });
   } catch (error) {
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalServerError });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
   }
 }
 
@@ -95,33 +95,33 @@ async function updateImage(req, res) {
     const image_id = req.params.id;
 
     //validate struct
-    var [body, err] = validator.Bind(req.body, domain.ImageUpdateRequest).ValidateStruct().Parse();
+    var [body, err] = validator.bind(req.body, domain.ImageUpdateRequest).validateStruct().parse();
     if (err !== null) {
       switch (err) {
-        case domain.MalformedJSONErrResMsg:
-          return res.status(BAD_REQUEST).send({ message: domain.MalformedJSONErrResMsg });
+        case domain.malformedJSONErrResMsg:
+          return res.status(BAD_REQUEST).send({ message: domain.malformedJSONErrResMsg });
         case domain.validationFailureErrResMsg:
           return res.status(BAD_REQUEST).send({ message: domain.validationFailureErrResMsg });
         default:
-          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalErorAtValidation });
+          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalErorAtValidation });
       }
     }
     //service
     var err = await Service.ImageService.UpdateImage(db, body, image_id, req.user_id);
     if (err !== null) {
       switch (err) {
-        case domain.ImageIsNotFound:
-          return res.status(NOT_FOUND).send({ message: domain.ImageIsNotFound });
-        case domain.ThisUserIsNotTheOwner:
-          return res.status(BAD_REQUEST).send({ message: domain.ThisUserIsNotTheOwner });
+        case domain.imageIsNotFound:
+          return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
+        case domain.thisUserIsNotTheOwner:
+          return res.status(BAD_REQUEST).send({ message: domain.thisUserIsNotTheOwner });
         default:
-          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalServerError });
+          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }
     }
 
-    return res.status(OK).send({ message: domain.MsgImageUpdateSuccess });
+    return res.status(OK).send({ message: domain.msgImageUpdateSuccess });
   } catch (error) {
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalServerError });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
   }
 }
 
@@ -133,29 +133,29 @@ async function deleteImage(req, res) {
     var [body, err] = validator.Bind(req.params, domain.ImageDeleteRequest).ValidateStruct().Parse();
     if (err !== null) {
       switch (err) {
-        case domain.MalformedJSONErrResMsg:
-          return res.status(BAD_REQUEST).send({ message: domain.MalformedJSONErrResMsg });
+        case domain.malformedJSONErrResMsg:
+          return res.status(BAD_REQUEST).send({ message: domain.malformedJSONErrResMsg });
         case domain.validationFailureErrResMsg:
           return res.status(BAD_REQUEST).send({ message: domain.validationFailureErrResMsg });
         default:
-          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalErorAtValidation });
+          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalErorAtValidation });
       }
     }
     //service
     var err = await Service.ImageService.DeleteImage(db, body.id, req.user_id);
     if (err !== null) {
       switch (err) {
-        case domain.ImageIsNotFound:
-          return res.status(NOT_FOUND).send({ message: domain.ImageIsNotFound });
-        case domain.ThisUserIsNotTheOwner:
-          return res.status(BAD_REQUEST).send({ message: domain.ThisUserIsNotTheOwner });
+        case domain.imageIsNotFound:
+          return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
+        case domain.thisUserIsNotTheOwner:
+          return res.status(BAD_REQUEST).send({ message: domain.thisUserIsNotTheOwner });
         default:
-          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalServerError });
+          return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }
     }
 
-    return res.status(OK).send({ message: domain.MsgImageDeleteSuccess });
+    return res.status(OK).send({ message: domain.msgImageDeleteSuccess });
   } catch (error) {
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.InternalServerError });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
   }
 }
