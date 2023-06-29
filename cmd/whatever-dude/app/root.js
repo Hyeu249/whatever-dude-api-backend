@@ -18,8 +18,15 @@ const app = {
       .option("host", yargs.persistentFlags().stringVar("Host of my app.", "localhost"))
       .option("listen-port", yargs.persistentFlags().stringVar("Host of my app.", "3000", "p"))
       .option("jwt-secret", yargs.persistentFlags().stringVar("JWT secret used to generate JWT token."))
+      //
       .option("db-type", yargs.persistentFlags().stringVar("DB type. E.g. sqlite3"))
-      .option("db-str", yargs.persistentFlags().stringVar("Connection string to the DB."))
+      .option("db-host", yargs.persistentFlags().stringVar("DB host. E.g. localhost"))
+      .option("db-port", yargs.persistentFlags().stringVar("DB port. E.g. 3306"))
+      .option("db-username", yargs.persistentFlags().stringVar("DB username. E.g. root"))
+      .option("db-password", yargs.persistentFlags().stringVar("DB password. E.g. test"))
+      .option("db-database", yargs.persistentFlags().stringVar("DB database. E.g. test_db"))
+      .option("db-protocol", yargs.persistentFlags().stringVar("DB protocol. E.g. tcp", "tcp"))
+
       .option("debug", yargs.persistentFlags().boolVarP("Enable debug mode.", "d"))
       .parse();
   },
@@ -29,13 +36,14 @@ module.exports = app;
 
 async function server({ argv }) {
   //declare
-  const { dbType, dbStr, debug, listenPort } = argv;
+  const { dbType, dbUsername, dbPassword, dbDatabase, dbProtocol, dbHost, dbPort, debug, listenPort } = argv;
+
   try {
     if (debug) {
       log.setLevel(log.DebugLevel);
     }
     //start db
-    var [sequelizeDb, err] = await sequelize.open(dbType, dbStr);
+    var [sequelizeDb, err] = await sequelize.open(dbType, [dbUsername, dbPassword, dbProtocol, dbHost, dbPort, dbDatabase]);
     if (err !== null) {
       throw new Error(err);
     }
