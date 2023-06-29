@@ -24,7 +24,7 @@ async function register(req, res) {
 
   try {
     //validate struct
-    var [body, err] = validator.Bind(req.body, domain.userRegisterRequest).ValidateStruct().Parse();
+    var [body, err] = validator.bind(req.body, domain.userRegisterRequest).validateStruct().parse();
     if (err !== null) {
       switch (err) {
         case domain.malformedJSONErrResMsg:
@@ -48,7 +48,6 @@ async function register(req, res) {
 
     return res.status(OK).send({ message: domain.msgUserRegisterSuccess });
   } catch (error) {
-    console.log("error: ", error);
     return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
   }
 }
