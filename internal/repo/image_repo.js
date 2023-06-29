@@ -1,8 +1,6 @@
 const Sequelize = require("@server/lib/sequelize");
 const { Op } = require("sequelize");
 
-const Image = require("@server/lib/sequelize/image");
-
 const log = require("@server/lib/log");
 
 module.exports = {
@@ -20,7 +18,6 @@ async function insertNewImage(tx, body, user_id) {
       {
         name: body.name,
         description: body.description,
-        type: Image.Image_types.PRINTING,
         file_extention: body.file_extention,
         location: body.location,
         user_id: user_id,
