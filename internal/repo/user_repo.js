@@ -1,4 +1,4 @@
-const { User } = require("@server/lib/sequelize/user");
+const { User } = require("@server/lib/sequelize/users");
 const log = require("@server/lib/log");
 
 module.exports = {
