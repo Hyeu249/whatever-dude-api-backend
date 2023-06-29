@@ -1,24 +1,20 @@
 const Sequelize = require("@server/lib/sequelize");
+const { Op } = require("sequelize");
+
 const Image = require("@server/lib/sequelize/image");
 
 const log = require("@server/lib/log");
 
-class ImageRepo {
-  constructor() {}
-  static InsertNewPrintingImage = InsertNewPrintingImage;
-  static InsertNewSampleImage = InsertNewSampleImage;
-  static UpdateImage = UpdateImage;
-  static GetImageList = GetImageList;
-  static DetroyImage = DetroyImage;
-  static IsImageExist = IsImageExist;
-  static IsSampleImage = IsSampleImage;
-  static IsPrintingImage = IsPrintingImage;
-  static IsThisUserOwned = IsThisUserOwned;
-}
-module.exports = ImageRepo;
+module.exports = {
+  insertNewImage,
+  updateImage,
+  getImageList,
+  detroyImage,
+  isImageExist,
+};
 
-async function InsertNewPrintingImage(tx, body, user_id) {
-  log.Repo("Start IMAGE Repo InsertNewPrintingImage");
+async function insertNewImage(tx, body, user_id) {
+  log.repo("Start IMAGE Repo insertNewImage");
   try {
     const _ = await Sequelize.Image.create(
       {
@@ -32,40 +28,16 @@ async function InsertNewPrintingImage(tx, body, user_id) {
       { transaction: tx }
     );
 
-    log.Repo("Finish IMAGE Repo InsertNewPrintingImage");
+    log.repo("Finish IMAGE Repo insertNewImage");
     return null;
   } catch (error) {
-    log.Error("Finish IMAGE Repo InsertNewPrintingImage with error", error);
+    log.error("Finish IMAGE Repo insertNewImage with error", error);
     return error;
   }
 }
 
-async function InsertNewSampleImage(tx, body, user_id) {
-  log.Repo("Start IMAGE Repo InsertNewSampleImage");
-
-  try {
-    const _ = await Sequelize.Image.create(
-      {
-        name: body.name,
-        description: body.description,
-        type: Image.Image_types.SAMPLE,
-        file_extention: body.file_extention,
-        location: body.location,
-        user_id: user_id,
-      },
-      { transaction: tx }
-    );
-
-    log.Repo("Finish IMAGE Repo InsertNewSampleImage");
-    return null;
-  } catch (error) {
-    log.Error("Finish IMAGE Repo InsertNewSampleImage with error", error);
-    return error;
-  }
-}
-
-async function UpdateImage(tx, body, image_id) {
-  log.Repo("Start IMAGE Repo UpdateImage");
+async function updateImage(tx, body, image_id) {
+  log.repo("Start IMAGE Repo updateImage");
   try {
     const data = {};
     if (body.name !== undefined) data.name = body.name;
@@ -73,26 +45,23 @@ async function UpdateImage(tx, body, image_id) {
 
     const _ = await Sequelize.Image.update(data, { where: { id: image_id }, transaction: tx });
 
-    log.Repo("Finish IMAGE Repo UpdateImage");
+    log.repo("Finish IMAGE Repo updateImage");
     return null;
   } catch (error) {
-    log.Error("Finish IMAGE Repo UpdateImage with error", error);
+    log.error("Finish IMAGE Repo updateImage with error", error);
     return error;
   }
 }
 
-async function GetImageList(tx, body, user_id) {
-  log.Repo("Start IMAGE Repo GetImageList");
+async function getImageList(tx, body) {
+  log.repo("Start IMAGE Repo getImageList");
   let offset = 0;
   let limit = 20;
-  const { Op } = Sequelize;
 
-  const conditions = { user_id };
+  const conditions = {};
   //exact condition
   if (body.offset !== undefined) offset = body.offset;
   if (body.limit !== undefined) limit = body.limit;
-  if (body.image_id !== undefined) conditions.id = body.image_id;
-  if (body.type !== undefined) conditions.type = body.type;
   //like condition
   if (body.name !== undefined) conditions.name = { [Op.like]: "%" + body.name + "%" };
   if (body.description !== undefined) conditions.description = { [Op.like]: "%" + body.description + "%" };
@@ -107,16 +76,16 @@ async function GetImageList(tx, body, user_id) {
       { transaction: tx }
     );
 
-    log.Repo("Finish IMAGE Repo GetImageList");
+    log.repo("Finish IMAGE Repo getImageList");
     return [images, null];
   } catch (error) {
-    log.Error("Finish IMAGE Repo GetImageList with error", error);
+    log.error("Finish IMAGE Repo getImageList with error", error);
     return [null, error];
   }
 }
 
-async function DetroyImage(tx, image_id) {
-  log.Repo("Start IMAGE Repo DetroyImage");
+async function detroyImage(tx, image_id) {
+  log.repo("Start IMAGE Repo detroyImage");
 
   try {
     const _ = await Sequelize.Image.destroy(
@@ -128,16 +97,16 @@ async function DetroyImage(tx, image_id) {
       { transaction: tx }
     );
 
-    log.Repo("Finish IMAGE Repo DetroyImage");
+    log.repo("Finish IMAGE Repo detroyImage");
     return null;
   } catch (error) {
-    log.Error("Finish IMAGE Repo DetroyImage with error", error);
+    log.error("Finish IMAGE Repo detroyImage with error", error);
     return error;
   }
 }
 
-async function IsImageExist(tx, image_id) {
-  log.Repo("Start IMAGE Repo IsImageExist");
+async function isImageExist(tx, image_id) {
+  log.repo("Start IMAGE Repo isImageExist");
 
   try {
     const count = await Sequelize.Image.count(
@@ -149,76 +118,10 @@ async function IsImageExist(tx, image_id) {
       { transaction: tx }
     );
 
-    log.Repo("Finish IMAGE Repo IsImageExist");
+    log.repo("Finish IMAGE Repo isImageExist");
     return [count > 0, null];
   } catch (error) {
-    log.Error("Finish IMAGE Repo IsImageExist with error", error);
-    return [null, error];
-  }
-}
-
-async function IsSampleImage(tx, image_id) {
-  log.Repo("Start IMAGE Repo IsSampleImage");
-
-  try {
-    const count = await Sequelize.Image.count(
-      {
-        where: {
-          id: image_id,
-          type: Image.Image_types.SAMPLE,
-        },
-      },
-      { transaction: tx }
-    );
-
-    log.Repo("Finish IMAGE Repo IsSampleImage");
-    return [count > 0, null];
-  } catch (error) {
-    log.Error("Finish IMAGE Repo IsSampleImage with error", error);
-    return [null, error];
-  }
-}
-
-async function IsPrintingImage(tx, image_id) {
-  log.Repo("Start IMAGE Repo IsPrintingImage");
-
-  try {
-    const count = await Sequelize.Image.count(
-      {
-        where: {
-          id: image_id,
-          type: Image.Image_types.PRINTING,
-        },
-      },
-      { transaction: tx }
-    );
-
-    log.Repo("Finish IMAGE Repo IsPrintingImage");
-    return [count > 0, null];
-  } catch (error) {
-    log.Error("Finish IMAGE Repo IsPrintingImage with error", error);
-    return [null, error];
-  }
-}
-
-async function IsThisUserOwned(tx, image_id, user_id) {
-  log.Repo("Start IMAGE Repo IsThisUserOwned");
-
-  try {
-    const count = await Sequelize.Image.count(
-      {
-        where: {
-          id: image_id,
-          user_id: user_id,
-        },
-      },
-      { transaction: tx }
-    );
-
-    log.Repo("Finish IMAGE Repo IsThisUserOwned");
-    return [count > 0, null];
-  } catch (error) {
-    log.Error("Finish IMAGE Repo IsThisUserOwned with error", error);
+    log.error("Finish IMAGE Repo isImageExist with error", error);
     return [null, error];
   }
 }

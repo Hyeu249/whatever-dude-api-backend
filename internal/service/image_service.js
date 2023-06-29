@@ -11,7 +11,7 @@ module.exports = {
 };
 
 async function createImage(db, body, user_id) {
-  log.Service("Start IMAGE createImage Service");
+  log.service("Start IMAGE createImage Service");
   const tx = await db.transaction();
 
   try {
@@ -22,19 +22,19 @@ async function createImage(db, body, user_id) {
     }
 
     await tx.commit();
-    log.Service("Finish IMAGE createImage Service");
+    log.service("Finish IMAGE createImage Service");
     return null;
   } catch (error) {
     await tx.rollback();
     const parseError = help.parseErrorMessage(error.message);
 
-    log.Error("Finish IMAGE createImage Service with error", error);
+    log.error("Finish IMAGE createImage Service with error", error);
     return parseError;
   }
 }
 
 async function updateImage(db, body, image_id) {
-  log.Service("Start IMAGE updateImage Service");
+  log.service("Start IMAGE updateImage Service");
   const tx = await db.transaction();
 
   try {
@@ -53,19 +53,19 @@ async function updateImage(db, body, image_id) {
     }
 
     await tx.commit();
-    log.Service("Finish IMAGE updateImage Service");
+    log.service("Finish IMAGE updateImage Service");
     return null;
   } catch (error) {
     await tx.rollback();
     const parseError = help.parseErrorMessage(error.message);
 
-    log.Error("Finish IMAGE updateImage Service with error", error);
+    log.error("Finish IMAGE updateImage Service with error", error);
     return parseError;
   }
 }
 
 async function getImageList(db, body, user_id) {
-  log.Service("Start IMAGE getImageList Service");
+  log.service("Start IMAGE getImageList Service");
   const tx = await db.transaction();
 
   try {
@@ -76,19 +76,19 @@ async function getImageList(db, body, user_id) {
     }
 
     await tx.commit();
-    log.Service("Finish IMAGE getImageList Service");
+    log.service("Finish IMAGE getImageList Service");
     return [images, null];
   } catch (error) {
     await tx.rollback();
     const parseError = help.parseErrorMessage(error.message);
 
-    log.Error("Finish IMAGE getImageList Service with error", error);
+    log.error("Finish IMAGE getImageList Service with error", error);
     return [null, parseError];
   }
 }
 
 async function deleteImage(db, image_id, user_id) {
-  log.Service("Start IMAGE deleteImage Service");
+  log.service("Start IMAGE deleteImage Service");
   const tx = await db.transaction();
 
   try {
@@ -108,13 +108,13 @@ async function deleteImage(db, image_id, user_id) {
     }
 
     await tx.commit();
-    log.Service("Finish IMAGE deleteImage Service");
+    log.service("Finish IMAGE deleteImage Service");
     return null;
   } catch (error) {
     await tx.rollback();
     const parseError = help.parseErrorMessage(error.message);
 
-    log.Error("Finish IMAGE deleteImage Service with error", error);
+    log.error("Finish IMAGE deleteImage Service with error", error);
     return parseError;
   }
 }
