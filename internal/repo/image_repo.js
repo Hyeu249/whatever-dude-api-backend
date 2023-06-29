@@ -18,7 +18,7 @@ async function insertNewImage(tx, body, user_id) {
       {
         name: body.name,
         description: body.description,
-        file_extention: body.file_extention,
+        extention: body.extention,
         location: body.location,
         user_id: user_id,
       },
