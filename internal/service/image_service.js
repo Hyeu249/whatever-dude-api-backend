@@ -87,7 +87,7 @@ async function getImageList(db, body, user_id) {
   }
 }
 
-async function deleteImage(db, image_id, user_id) {
+async function deleteImage(db, image_id) {
   log.service("Start IMAGE deleteImage Service");
   const tx = await db.transaction();
 

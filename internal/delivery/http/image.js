@@ -72,7 +72,7 @@ async function getImageList(req, res) {
       }
     }
     //service
-    var [images, err] = await service.imageService.GetImageList(db, body, req.user_id);
+    var [images, err] = await service.imageService.getImageList(db, body, req.user_id);
     if (err !== null) {
       switch (err) {
         case domain.imageIsNotFound:
@@ -107,7 +107,7 @@ async function updateImage(req, res) {
       }
     }
     //service
-    var err = await Service.ImageService.UpdateImage(db, body, image_id, req.user_id);
+    var err = await service.imageService.updateImage(db, body, image_id, req.user_id);
     if (err !== null) {
       switch (err) {
         case domain.imageIsNotFound:
@@ -130,7 +130,7 @@ async function deleteImage(req, res) {
 
   try {
     //validate struct
-    var [body, err] = validator.Bind(req.params, domain.ImageDeleteRequest).ValidateStruct().Parse();
+    var [body, err] = validator.bind(req.params, domain.imageDeleteRequest).validateStruct().parse();
     if (err !== null) {
       switch (err) {
         case domain.malformedJSONErrResMsg:
@@ -142,7 +142,7 @@ async function deleteImage(req, res) {
       }
     }
     //service
-    var err = await Service.ImageService.DeleteImage(db, body.id, req.user_id);
+    var err = await service.imageService.deleteImage(db, body.id);
     if (err !== null) {
       switch (err) {
         case domain.imageIsNotFound:
