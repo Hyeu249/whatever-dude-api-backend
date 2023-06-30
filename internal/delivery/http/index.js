@@ -2,6 +2,7 @@ const CategoryHandler = require("./category");
 const UserHandler = require("./user");
 const ImageHandler = require("./image");
 const TopicHandler = require("./topic");
+const GenderHandler = require("./gender");
 const multer = require("@server/lib/multer");
 const express = require("express");
 
@@ -52,6 +53,18 @@ class Http {
     router.patch(g + "/:id", handler.updateTopic());
     router.get(g + "", handler.getTopic());
     router.delete(g + "/:id", handler.deleteTopic());
+    return router;
+  }
+
+  attachGenderServiceHTTPHandler() {
+    const handler = new GenderHandler(this.db);
+    const router = new express.Router();
+    const g = "/genders";
+
+    router.post(g + "", handler.createGender());
+    router.patch(g + "/:id", handler.updateGender());
+    router.get(g + "", handler.getGender());
+    router.delete(g + "/:id", handler.deleteGender());
     return router;
   }
 }
