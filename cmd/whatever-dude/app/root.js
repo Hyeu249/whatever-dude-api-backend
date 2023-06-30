@@ -5,9 +5,8 @@ const yargs = require("@server/lib/yargs");
 const morgan = require("@server/lib/morgan");
 const log = require("@server/lib/log");
 const sequelize = require("@server/lib/sequelize");
-const http = require("@server/internal/delivery/http");
 const middleware = require("@server/lib/middleware");
-const Http = require("../../../internal-2/delivery/http");
+const Http = require("../../../internal/delivery/http");
 
 const version = require("./version");
 version.use("1.0.0");
@@ -65,10 +64,10 @@ async function server({ argv }) {
     app.use(cors());
     app.use(morgan.middleware());
 
-    const http_ = new Http(sequelizeDb);
-    app.use(http_.attachUserServiceHTTPHandler());
-    app.use(http_.attachImageServiceHTTPHandler());
-    app.use(http_.attachCategoryServiceHTTPHandler());
+    const http = new Http(sequelizeDb);
+    app.use(http.attachUserServiceHTTPHandler());
+    app.use(http.attachImageServiceHTTPHandler());
+    app.use(http.attachCategoryServiceHTTPHandler());
     app.use(...middleware);
 
     //start server

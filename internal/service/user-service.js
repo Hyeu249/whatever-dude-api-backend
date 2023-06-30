@@ -1,7 +1,7 @@
 const UserRepo = require("../repo/user-repo");
 const log = require("@server/lib/log");
 const help = require("@server/lib/help");
-const domain = require("@server/internal-2/domain");
+const domain = require("@server/internal/domain");
 
 class UserService extends UserRepo {
   constructor(db) {

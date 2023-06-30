@@ -1,7 +1,7 @@
 const ImageRepo = require("../repo/image-repo");
 const log = require("@server/lib/log");
 const help = require("@server/lib/help");
-const domain = require("@server/internal-2/domain");
+const domain = require("@server/internal/domain");
 
 class ImageService extends ImageRepo {
   constructor(db) {

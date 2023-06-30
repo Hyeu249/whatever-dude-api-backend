@@ -1,6 +1,6 @@
 const CategoryService = require("../../service/category-service");
 const { StatusCodes } = require("http-status-codes");
-const domain = require("@server/internal-2/domain");
+const domain = require("@server/internal/domain");
 const validator = require("@server/lib/validator");
 
 const { OK, BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
