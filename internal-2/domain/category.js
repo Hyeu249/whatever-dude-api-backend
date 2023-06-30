@@ -6,7 +6,7 @@ const domains = {
   msgCategoryGetListSuccess: "Get list successfully.",
   msgCategoryDeleteSuccess: "Delete category successfully.",
 
-  CategoryIsNotFound: "Category is not found.",
+  categoryIsNotFound: "Category is not found.",
 };
 
 const categoryCreateRequest = {

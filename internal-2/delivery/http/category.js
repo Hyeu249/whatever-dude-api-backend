@@ -10,8 +10,35 @@ class CategoryHandler extends CategoryService {
     super(db);
   }
   getCategory() {
-    return (req, res) => {
-      res.send("get!!!");
+    return async (req, res) => {
+      try {
+        //validate struct
+        var [body, err] = validator.bind(req.query, domain.categoryListRequest).validateStruct().parse();
+        if (err !== null) {
+          switch (err) {
+            case domain.malformedJSONErrResMsg:
+              return res.status(BAD_REQUEST).send({ message: domain.malformedJSONErrResMsg });
+            case domain.validationFailureErrResMsg:
+              return res.status(BAD_REQUEST).send({ message: domain.validationFailureErrResMsg });
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalErorAtValidation });
+          }
+        }
+        //service
+        var [categories, err] = await this.serviceGetCategory(body);
+        if (err !== null) {
+          switch (err) {
+            case domain.categoryIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.categoryIsNotFound });
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+          }
+        }
+
+        return res.status(OK).send({ message: domain.msgCategoryGetListSuccess, result: categories });
+      } catch (error) {
+        return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+      }
     };
   }
 
@@ -47,14 +74,70 @@ class CategoryHandler extends CategoryService {
   }
 
   updateCategory() {
-    return (req, res) => {
-      res.send("updated!!!");
+    return async (req, res) => {
+      try {
+        const category_id = req.params.id;
+
+        //validate struct
+        var [body, err] = validator.bind(req.body, domain.categoryUpdateRequest).validateStruct().parse();
+        if (err !== null) {
+          switch (err) {
+            case domain.malformedJSONErrResMsg:
+              return res.status(BAD_REQUEST).send({ message: domain.malformedJSONErrResMsg });
+            case domain.validationFailureErrResMsg:
+              return res.status(BAD_REQUEST).send({ message: domain.validationFailureErrResMsg });
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalErorAtValidation });
+          }
+        }
+        //service
+        var err = await this.serviceUpdateCategory(body, category_id);
+        if (err !== null) {
+          switch (err) {
+            case domain.categoryIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.categoryIsNotFound });
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+          }
+        }
+
+        return res.status(OK).send({ message: domain.msgCategoryUpdateSuccess });
+      } catch (error) {
+        return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+      }
     };
   }
 
   deleteCategory() {
-    return (req, res) => {
-      res.send("delete!!!");
+    return async (req, res) => {
+      try {
+        //validate struct
+        var [body, err] = validator.bind(req.params, domain.categoryDeleteRequest).validateStruct().parse();
+        if (err !== null) {
+          switch (err) {
+            case domain.malformedJSONErrResMsg:
+              return res.status(BAD_REQUEST).send({ message: domain.malformedJSONErrResMsg });
+            case domain.validationFailureErrResMsg:
+              return res.status(BAD_REQUEST).send({ message: domain.validationFailureErrResMsg });
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalErorAtValidation });
+          }
+        }
+        //service
+        var err = await this.serviceDeleteCategory(body.id);
+        if (err !== null) {
+          switch (err) {
+            case domain.categoryIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.categoryIsNotFound });
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+          }
+        }
+
+        return res.status(OK).send({ message: domain.msgCategoryDeleteSuccess });
+      } catch (error) {
+        return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+      }
     };
   }
 }
