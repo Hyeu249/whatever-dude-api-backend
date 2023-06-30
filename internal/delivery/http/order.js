@@ -92,7 +92,7 @@ class OrderHandler extends OrderService {
           }
         }
         //service
-        var [orders, err] = await this.serviceGetOrder(body);
+        var [orders, err] = await this.serviceGetOrder(body, req.user_id);
         if (err !== null) {
           switch (err) {
             case domain.orderIsNotFound:

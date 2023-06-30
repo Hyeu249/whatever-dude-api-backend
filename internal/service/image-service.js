@@ -16,9 +16,18 @@ class ImageService extends ImageRepo {
 
     try {
       //insert new image
+      if (user_id !== undefined) {
+        var [isUserExist, err] = await this.IS_ENTITY_EXIST(tx, this.Users, user_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isUserExist) {
+          throw new Error(domain.userIsNotFound);
+        }
+        body.user_id = user_id;
+      }
 
-      body.user_id = user_id;
-      const err = await this.CREATE(tx, this.Images, body);
+      var err = await this.CREATE(tx, this.Images, body);
       if (err !== null) {
         throw new Error(err);
       }
@@ -67,7 +76,7 @@ class ImageService extends ImageRepo {
     }
   }
 
-  async serviceGetImage(body) {
+  async serviceGetImage(body, user_id) {
     log.service("Start IMAGE GetImage Service");
     const db = this.db;
     const tx = await db.transaction();
@@ -81,6 +90,17 @@ class ImageService extends ImageRepo {
         if (!isImageExist) {
           throw new Error(domain.imageIsNotFound);
         }
+      }
+
+      if (user_id !== undefined) {
+        var [isUserExist, err] = await this.IS_ENTITY_EXIST(tx, this.Users, user_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isUserExist) {
+          throw new Error(domain.userIsNotFound);
+        }
+        body.user_id = user_id;
       }
 
       //get images

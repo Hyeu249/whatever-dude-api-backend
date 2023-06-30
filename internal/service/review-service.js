@@ -24,7 +24,17 @@ class ReviewService extends ReviewRepo {
         throw new Error(domain.itemIsNotFound);
       }
 
-      body.user_id = user_id;
+      if (user_id !== undefined) {
+        var [isUserExist, err] = await this.IS_ENTITY_EXIST(tx, this.Users, user_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isUserExist) {
+          throw new Error(domain.userIsNotFound);
+        }
+        body.user_id = user_id;
+      }
+
       var err = await this.CREATE(tx, this.Reviews, body);
       if (err !== null) {
         throw new Error(err);
@@ -73,7 +83,7 @@ class ReviewService extends ReviewRepo {
     }
   }
 
-  async serviceGetReview(body) {
+  async serviceGetReview(body, user_id) {
     log.service("Start REVIEW GetReview Service");
     const db = this.db;
     const tx = await db.transaction();
@@ -87,6 +97,17 @@ class ReviewService extends ReviewRepo {
         if (!isReviewExist) {
           throw new Error(domain.reviewIsNotFound);
         }
+      }
+
+      if (user_id !== undefined) {
+        var [isUserExist, err] = await this.IS_ENTITY_EXIST(tx, this.Users, user_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isUserExist) {
+          throw new Error(domain.userIsNotFound);
+        }
+        body.user_id = user_id;
       }
 
       if (body.item_id !== undefined) {

@@ -93,7 +93,7 @@ class ImageHandler extends ImageService {
           }
         }
         //service
-        var [images, err] = await this.serviceGetImage(body);
+        var [images, err] = await this.serviceGetImage(body, req.user_id);
         if (err !== null) {
           switch (err) {
             case domain.imageIsNotFound:

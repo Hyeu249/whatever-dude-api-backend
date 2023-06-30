@@ -94,7 +94,7 @@ class ReviewHandler extends ReviewService {
           }
         }
         //service
-        var [reviews, err] = await this.serviceGetReview(body);
+        var [reviews, err] = await this.serviceGetReview(body, req.user_id);
         if (err !== null) {
           switch (err) {
             case domain.reviewIsNotFound:

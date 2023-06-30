@@ -16,7 +16,17 @@ class OrderService extends OrderRepo {
 
     try {
       //insert new order
-      body.user_id = user_id;
+      if (user_id !== undefined) {
+        var [isUserExist, err] = await this.IS_ENTITY_EXIST(tx, this.Users, user_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isUserExist) {
+          throw new Error(domain.userIsNotFound);
+        }
+        body.user_id = user_id;
+      }
+
       var err = await this.CREATE(tx, this.Orders, body);
       if (err !== null) {
         throw new Error(err);
@@ -65,7 +75,7 @@ class OrderService extends OrderRepo {
     }
   }
 
-  async serviceGetOrder(body) {
+  async serviceGetOrder(body, user_id) {
     log.service("Start ORDER GetOrder Service");
     const db = this.db;
     const tx = await db.transaction();
@@ -79,6 +89,17 @@ class OrderService extends OrderRepo {
         if (!isOrderExist) {
           throw new Error(domain.orderIsNotFound);
         }
+      }
+
+      if (user_id !== undefined) {
+        var [isUserExist, err] = await this.IS_ENTITY_EXIST(tx, this.Users, user_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isUserExist) {
+          throw new Error(domain.userIsNotFound);
+        }
+        body.user_id = user_id;
       }
 
       //get orders
