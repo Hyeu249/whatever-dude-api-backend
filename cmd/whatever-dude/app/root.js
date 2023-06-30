@@ -68,6 +68,7 @@ async function server({ argv }) {
     app.use(http.attachUserServiceHTTPHandler());
     app.use(http.attachImageServiceHTTPHandler());
     app.use(http.attachCategoryServiceHTTPHandler());
+    app.use(http.attachTopicServiceHTTPHandler());
     app.use(...middleware);
 
     //start server
