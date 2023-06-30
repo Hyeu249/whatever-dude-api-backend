@@ -71,6 +71,7 @@ async function server({ argv }) {
     app.use(http.attachTopicServiceHTTPHandler());
     app.use(http.attachGenderServiceHTTPHandler());
     app.use(http.attachColorServiceHTTPHandler());
+    app.use(http.attachReviewServiceHTTPHandler());
     app.use(...middleware);
 
     //start server
