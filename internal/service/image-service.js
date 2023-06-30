@@ -36,7 +36,7 @@ class ImageService extends ImageRepo {
   }
 
   async serviceUpdateImage(body, image_id) {
-    log.service("Start CATEGORY UpdateImage Service");
+    log.service("Start IMAGE UpdateImage Service");
     const db = this.db;
     const tx = await db.transaction();
 
@@ -56,19 +56,19 @@ class ImageService extends ImageRepo {
       }
 
       await tx.commit();
-      log.service("Finish CATEGORY UpdateImage Service");
+      log.service("Finish IMAGE UpdateImage Service");
       return null;
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
 
-      log.error("Finish CATEGORY UpdateImage Service with error", error);
+      log.error("Finish IMAGE UpdateImage Service with error", error);
       return parseError;
     }
   }
 
   async serviceGetImage(body) {
-    log.service("Start CATEGORY GetImage Service");
+    log.service("Start IMAGE GetImage Service");
     const db = this.db;
     const tx = await db.transaction();
 
@@ -90,19 +90,19 @@ class ImageService extends ImageRepo {
       }
 
       await tx.commit();
-      log.service("Finish CATEGORY GetImage Service");
+      log.service("Finish IMAGE GetImage Service");
       return [images, null];
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
 
-      log.error("Finish CATEGORY GetImage Service with error", error);
+      log.error("Finish IMAGE GetImage Service with error", error);
       return [null, parseError];
     }
   }
 
   async serviceDeleteImage(image_id) {
-    log.service("Start CATEGORY DeleteImage Service");
+    log.service("Start IMAGE DeleteImage Service");
     const db = this.db;
     const tx = await db.transaction();
 
@@ -123,13 +123,13 @@ class ImageService extends ImageRepo {
       }
 
       await tx.commit();
-      log.service("Finish CATEGORY DeleteImage Service");
+      log.service("Finish IMAGE DeleteImage Service");
       return null;
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
 
-      log.error("Finish CATEGORY DeleteImage Service with error", error);
+      log.error("Finish IMAGE DeleteImage Service with error", error);
       return parseError;
     }
   }
