@@ -1,20 +1,20 @@
-const CategoryService = require("../../service/category-service");
+const ImageService = require("../../service/image-service");
 const { StatusCodes } = require("http-status-codes");
 const domain = require("@server/internal-2/domain");
 const validator = require("@server/lib/validator");
 
 const { OK, BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = StatusCodes;
 
-class CategoryHandler extends CategoryService {
+class ImageHandler extends ImageService {
   constructor(db) {
     super(db);
   }
 
-  createCategory() {
+  createImage() {
     return async (req, res) => {
       try {
         //validate struct
-        var [body, err] = validator.bind(req.body, domain.categoryCreateRequest).validateStruct().parse();
+        var [body, err] = validator.bind(req.body, domain.imageUploadRequest).validateStruct().parse();
         if (err !== null) {
           switch (err) {
             case domain.malformedJSONErrResMsg:
@@ -26,7 +26,7 @@ class CategoryHandler extends CategoryService {
           }
         }
         //service
-        var err = await this.serviceCreateCategory(body);
+        var err = await this.serviceCreateImage(body, req.user_id);
         if (err !== null) {
           switch (err) {
             default:
@@ -34,20 +34,54 @@ class CategoryHandler extends CategoryService {
           }
         }
 
-        return res.status(OK).send({ message: domain.msgCategoryCreateSuccess });
+        return res.status(OK).send({ message: domain.msgImageUploadSuccess });
+      } catch (error) {
+        console.log("error: ", error);
+        return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+      }
+    };
+  }
+
+  updateImage() {
+    return async (req, res) => {
+      try {
+        const image_id = req.params.id;
+
+        //validate struct
+        var [body, err] = validator.bind(req.body, domain.imageUpdateRequest).validateStruct().parse();
+        if (err !== null) {
+          switch (err) {
+            case domain.malformedJSONErrResMsg:
+              return res.status(BAD_REQUEST).send({ message: domain.malformedJSONErrResMsg });
+            case domain.validationFailureErrResMsg:
+              return res.status(BAD_REQUEST).send({ message: domain.validationFailureErrResMsg });
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalErorAtValidation });
+          }
+        }
+        //service
+        var err = await this.serviceUpdateImage(body, image_id);
+        if (err !== null) {
+          switch (err) {
+            case domain.imageIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+          }
+        }
+
+        return res.status(OK).send({ message: domain.msgImageUpdateSuccess });
       } catch (error) {
         return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }
     };
   }
 
-  updateCategory() {
+  getImage() {
     return async (req, res) => {
       try {
-        const category_id = req.params.id;
-
         //validate struct
-        var [body, err] = validator.bind(req.body, domain.categoryUpdateRequest).validateStruct().parse();
+        var [body, err] = validator.bind(req.query, domain.imageListRequest).validateStruct().parse();
         if (err !== null) {
           switch (err) {
             case domain.malformedJSONErrResMsg:
@@ -59,28 +93,28 @@ class CategoryHandler extends CategoryService {
           }
         }
         //service
-        var err = await this.serviceUpdateCategory(body, category_id);
+        var [images, err] = await this.serviceGetImage(body);
         if (err !== null) {
           switch (err) {
-            case domain.categoryIsNotFound:
-              return res.status(NOT_FOUND).send({ message: domain.categoryIsNotFound });
+            case domain.imageIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
             default:
               return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
           }
         }
 
-        return res.status(OK).send({ message: domain.msgCategoryUpdateSuccess });
+        return res.status(OK).send({ message: domain.msgImageDownloadSuccess, result: images });
       } catch (error) {
         return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }
     };
   }
 
-  getCategory() {
+  deleteImage() {
     return async (req, res) => {
       try {
         //validate struct
-        var [body, err] = validator.bind(req.query, domain.categoryListRequest).validateStruct().parse();
+        var [body, err] = validator.bind(req.params, domain.imageDeleteRequest).validateStruct().parse();
         if (err !== null) {
           switch (err) {
             case domain.malformedJSONErrResMsg:
@@ -92,50 +126,17 @@ class CategoryHandler extends CategoryService {
           }
         }
         //service
-        var [categories, err] = await this.serviceGetCategory(body);
+        var err = await this.serviceDeleteImage(body.id);
         if (err !== null) {
           switch (err) {
-            case domain.categoryIsNotFound:
-              return res.status(NOT_FOUND).send({ message: domain.categoryIsNotFound });
+            case domain.imageIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
             default:
               return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
           }
         }
 
-        return res.status(OK).send({ message: domain.msgCategoryGetListSuccess, result: categories });
-      } catch (error) {
-        return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
-      }
-    };
-  }
-
-  deleteCategory() {
-    return async (req, res) => {
-      try {
-        //validate struct
-        var [body, err] = validator.bind(req.params, domain.categoryDeleteRequest).validateStruct().parse();
-        if (err !== null) {
-          switch (err) {
-            case domain.malformedJSONErrResMsg:
-              return res.status(BAD_REQUEST).send({ message: domain.malformedJSONErrResMsg });
-            case domain.validationFailureErrResMsg:
-              return res.status(BAD_REQUEST).send({ message: domain.validationFailureErrResMsg });
-            default:
-              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalErorAtValidation });
-          }
-        }
-        //service
-        var err = await this.serviceDeleteCategory(body.id);
-        if (err !== null) {
-          switch (err) {
-            case domain.categoryIsNotFound:
-              return res.status(NOT_FOUND).send({ message: domain.categoryIsNotFound });
-            default:
-              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
-          }
-        }
-
-        return res.status(OK).send({ message: domain.msgCategoryDeleteSuccess });
+        return res.status(OK).send({ message: domain.msgImageDeleteSuccess });
       } catch (error) {
         return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }
@@ -143,4 +144,4 @@ class CategoryHandler extends CategoryService {
   }
 }
 
-module.exports = CategoryHandler;
+module.exports = ImageHandler;

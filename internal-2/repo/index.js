@@ -15,6 +15,25 @@ class Repo {
     }
   }
 
+  async UPDATE(tx, entity, body, id) {
+    log.repo("Start UPDATE Entity at Repo");
+
+    try {
+      const data = {};
+      for (const [key] of Object.entries(body)) {
+        if (body[key] !== undefined) data[key] = body[key];
+      }
+
+      const _ = await entity.update(data, { where: { id }, transaction: tx });
+
+      log.repo("Finish UPDATE Entity at Repo");
+      return null;
+    } catch (error) {
+      log.error("Finish UPDATE Entity at Repo with error", error);
+      return error;
+    }
+  }
+
   async READ(tx, entity, body) {
     log.repo("Start READ Entity at Repo");
     let offset = 0;
@@ -45,25 +64,6 @@ class Repo {
     } catch (error) {
       log.error("Finish READ Entity at Repo with error", error);
       return [null, error];
-    }
-  }
-
-  async UPDATE(tx, entity, body, id) {
-    log.repo("Start UPDATE Entity at Repo");
-
-    try {
-      const data = {};
-      for (const [key] of Object.entries(body)) {
-        if (body[key] !== undefined) data[key] = body[key];
-      }
-
-      const _ = await entity.update(data, { where: { id }, transaction: tx });
-
-      log.repo("Finish UPDATE Entity at Repo");
-      return null;
-    } catch (error) {
-      log.error("Finish UPDATE Entity at Repo with error", error);
-      return error;
     }
   }
 

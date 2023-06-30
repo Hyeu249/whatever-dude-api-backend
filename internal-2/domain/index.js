@@ -1,5 +1,6 @@
-const categoryDomains = require("./category");
 const userDomains = require("./user");
+const imageDomains = require("./image");
+const categoryDomains = require("./category");
 
 const domains = {
   internalServerError: "Something bad happened in our server. Please contact the Administrator.",
@@ -26,4 +27,5 @@ module.exports = {
   ...domains,
   ...categoryDomains,
   ...userDomains,
+  ...imageDomains,
 };
