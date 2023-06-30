@@ -1,6 +1,7 @@
 const CategoryRepo = require("../repo/category-repo");
 const log = require("@server/lib/log");
 const help = require("@server/lib/help");
+const domain = require("@server/internal-2/domain");
 
 class CategoryService extends CategoryRepo {
   constructor(db) {
@@ -70,7 +71,7 @@ class CategoryService extends CategoryRepo {
     const tx = await db.transaction();
 
     try {
-      var [isCategoryExist, err] = await this.IS_ENTITY_EXIST(tx, this.Categories, body, category_id);
+      var [isCategoryExist, err] = await this.IS_ENTITY_EXIST(tx, this.Categories, category_id);
       if (err !== null) {
         throw new Error(err);
       }

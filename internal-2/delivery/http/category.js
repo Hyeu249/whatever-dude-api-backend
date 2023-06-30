@@ -37,7 +37,6 @@ class CategoryHandler extends CategoryService {
 
         return res.status(OK).send({ message: domain.msgCategoryGetListSuccess, result: categories });
       } catch (error) {
-        console.log("error: ", error);
         return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }
     };

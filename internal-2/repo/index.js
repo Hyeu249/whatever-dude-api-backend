@@ -44,7 +44,7 @@ class Repo {
       log.repo("Finish READ Entity at Repo");
       return [records, null];
     } catch (error) {
-      log.Error("Finish READ Entity at Repo with error", error);
+      log.error("Finish READ Entity at Repo with error", error);
       return [null, error];
     }
   }
@@ -63,7 +63,7 @@ class Repo {
       log.repo("Finish UPDATE Entity at Repo");
       return null;
     } catch (error) {
-      log.Error("Finish UPDATE Entity at Repo with error", error);
+      log.error("Finish UPDATE Entity at Repo with error", error);
       return error;
     }
   }
@@ -77,7 +77,7 @@ class Repo {
       log.repo("Finish DELETE Entity at Repo");
       return null;
     } catch (error) {
-      log.Error("Finish DELETE Entity at Repo with error", error);
+      log.error("Finish DELETE Entity at Repo with error", error);
       return error;
     }
   }
@@ -91,7 +91,7 @@ class Repo {
       log.repo("Finish CHECK Entity at Repo");
       return [count > 0, null];
     } catch (error) {
-      log.Error("Finish CHECK Entity at Repo with error", error);
+      log.error("Finish CHECK Entity at Repo with error", error);
       return [null, error];
     }
   }
