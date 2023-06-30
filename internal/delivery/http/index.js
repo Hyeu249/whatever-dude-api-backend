@@ -5,6 +5,7 @@ const TopicHandler = require("./topic");
 const GenderHandler = require("./gender");
 const ColorHandler = require("./color");
 const ReviewHandler = require("./review");
+const OrderHandler = require("./order");
 const multer = require("@server/lib/multer");
 const express = require("express");
 
@@ -91,6 +92,18 @@ class Http {
     router.patch(g + "/:id", handler.updateReview());
     router.get(g + "", handler.getReview());
     router.delete(g + "/:id", handler.deleteReview());
+    return router;
+  }
+
+  attachOrderServiceHTTPHandler() {
+    const handler = new OrderHandler(this.db);
+    const router = new express.Router();
+    const g = "/orders";
+
+    router.post(g + "", handler.createOrder());
+    router.patch(g + "/:id", handler.updateOrder());
+    router.get(g + "", handler.getOrder());
+    router.delete(g + "/:id", handler.deleteOrder());
     return router;
   }
 }
