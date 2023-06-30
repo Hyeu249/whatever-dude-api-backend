@@ -7,6 +7,7 @@ const log = require("@server/lib/log");
 const sequelize = require("@server/lib/sequelize");
 const http = require("@server/internal/delivery/http");
 const middleware = require("@server/lib/middleware");
+const Http = require("../../../internal-2/delivery/http");
 
 const version = require("./version");
 version.use("1.0.0");
@@ -66,6 +67,8 @@ async function server({ argv }) {
 
     app.use(http.attachUserServiceHTTPHandler(sequelizeDb));
     app.use(http.attachImageServiceHTTPHandler(sequelizeDb));
+    const http_ = new Http(sequelizeDb);
+    app.use(http_.attachCategoryServiceHTTPHandler());
     app.use(...middleware);
 
     //start server
