@@ -9,6 +9,7 @@ class CategoryService extends CategoryRepo {
   }
   async serviceGetCategory(body) {
     log.service("Start CATEGORY GetCategory Service");
+    const db = this.db;
     const tx = await db.transaction();
 
     try {
@@ -23,7 +24,7 @@ class CategoryService extends CategoryRepo {
       }
 
       //get categories
-      var [categories, err] = await this.READ(tx, this.Categories, body, user_id);
+      var [categories, err] = await this.READ(tx, this.Categories, body);
       if (err !== null) {
         throw new Error(err);
       }
@@ -65,6 +66,7 @@ class CategoryService extends CategoryRepo {
 
   async serviceUpdateCategory(body, category_id) {
     log.service("Start CATEGORY UpdateCategory Service");
+    const db = this.db;
     const tx = await db.transaction();
 
     try {
@@ -95,6 +97,7 @@ class CategoryService extends CategoryRepo {
   }
   async serviceDeleteCategory(category_id) {
     log.service("Start CATEGORY DeleteCategory Service");
+    const db = this.db;
     const tx = await db.transaction();
 
     try {
