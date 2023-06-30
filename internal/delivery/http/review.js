@@ -29,6 +29,8 @@ class ReviewHandler extends ReviewService {
         var err = await this.serviceCreateReview(body, req.user_id);
         if (err !== null) {
           switch (err) {
+            case domain.itemIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.itemIsNotFound });
             default:
               return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
           }

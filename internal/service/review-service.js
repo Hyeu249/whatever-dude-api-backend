@@ -16,6 +16,14 @@ class ReviewService extends ReviewRepo {
 
     try {
       //insert new review
+      var [isItemExist, err] = await this.IS_ENTITY_EXIST(tx, this.Items, body.item_id);
+      if (err !== null) {
+        throw new Error(err);
+      }
+      if (!isItemExist) {
+        throw new Error(domain.itemIsNotFound);
+      }
+
       body.user_id = user_id;
       var err = await this.CREATE(tx, this.Reviews, body);
       if (err !== null) {
@@ -78,6 +86,16 @@ class ReviewService extends ReviewRepo {
         }
         if (!isReviewExist) {
           throw new Error(domain.reviewIsNotFound);
+        }
+      }
+
+      if (body.item_id !== undefined) {
+        var [isItemExist, err] = await this.IS_ENTITY_EXIST(tx, this.Items, body.item_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isItemExist) {
+          throw new Error(domain.itemIsNotFound);
         }
       }
 

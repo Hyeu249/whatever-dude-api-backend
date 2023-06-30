@@ -5,6 +5,7 @@ const topicDomains = require("./topic");
 const genderDomains = require("./gender");
 const colorDomains = require("./color");
 const reviewDomains = require("./review");
+const itemDomains = require("./item");
 
 const domains = {
   internalServerError: "Something bad happened in our server. Please contact the Administrator.",
@@ -36,4 +37,5 @@ module.exports = {
   ...genderDomains,
   ...colorDomains,
   ...reviewDomains,
+  ...itemDomains,
 };
