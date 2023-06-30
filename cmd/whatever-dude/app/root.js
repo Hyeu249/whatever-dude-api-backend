@@ -65,9 +65,9 @@ async function server({ argv }) {
     app.use(cors());
     app.use(morgan.middleware());
 
-    app.use(http.attachUserServiceHTTPHandler(sequelizeDb));
     app.use(http.attachImageServiceHTTPHandler(sequelizeDb));
     const http_ = new Http(sequelizeDb);
+    app.use(http_.attachUserServiceHTTPHandler());
     app.use(http_.attachCategoryServiceHTTPHandler());
     app.use(...middleware);
 

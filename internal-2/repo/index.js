@@ -1,5 +1,4 @@
 const log = require("@server/lib/log");
-const { Op } = require("sequelize");
 
 class Repo {
   async CREATE(tx, entity, body) {

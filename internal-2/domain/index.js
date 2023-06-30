@@ -1,4 +1,6 @@
 const categoryDomains = require("./category");
+const userDomains = require("./user");
+
 const domains = {
   internalServerError: "Something bad happened in our server. Please contact the Administrator.",
   internalDataBaseError: "Database insert error.",
@@ -23,4 +25,5 @@ const domains = {
 module.exports = {
   ...domains,
   ...categoryDomains,
+  ...userDomains,
 };

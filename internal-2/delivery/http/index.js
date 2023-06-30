@@ -1,9 +1,19 @@
 const CategoryHandler = require("./category");
+const UserHandler = require("./user");
 const express = require("express");
 
 class Http {
   constructor(db) {
     this.db = db;
+  }
+
+  attachUserServiceHTTPHandler() {
+    const handler = new UserHandler(this.db);
+    const router = new express.Router();
+    const g = "/users";
+
+    router.post(g + "", handler.register());
+    return router;
   }
 
   attachCategoryServiceHTTPHandler() {
