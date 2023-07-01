@@ -27,7 +27,7 @@ class ImageService extends ImageRepo {
         body.user_id = user_id;
       }
 
-      var err = await this.CREATE(tx, this.Images, body);
+      var [id, err] = await this.CREATE(tx, this.Images, body);
       if (err !== null) {
         throw new Error(err);
       }

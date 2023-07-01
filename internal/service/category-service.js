@@ -16,7 +16,7 @@ class CategoryService extends CategoryRepo {
 
     try {
       //insert new category
-      var err = await this.CREATE(tx, this.Categories, body);
+      var [id, err] = await this.CREATE(tx, this.Categories, body);
       if (err !== null) {
         throw new Error(err);
       }

@@ -16,7 +16,7 @@ class GenderService extends GenderRepo {
 
     try {
       //insert new gender
-      var err = await this.CREATE(tx, this.Genders, body);
+      var [id, err] = await this.CREATE(tx, this.Genders, body);
       if (err !== null) {
         throw new Error(err);
       }

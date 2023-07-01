@@ -27,7 +27,7 @@ class OrderService extends OrderRepo {
         body.user_id = user_id;
       }
 
-      var err = await this.CREATE(tx, this.Orders, body);
+      var [id, err] = await this.CREATE(tx, this.Orders, body);
       if (err !== null) {
         throw new Error(err);
       }

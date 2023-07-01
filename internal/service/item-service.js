@@ -16,7 +16,7 @@ class ItemService extends ItemRepo {
 
     try {
       //insert new item
-      var err = await this.CREATE(tx, this.Items, body);
+      var [id, err] = await this.CREATE(tx, this.Items, body);
       if (err !== null) {
         throw new Error(err);
       }

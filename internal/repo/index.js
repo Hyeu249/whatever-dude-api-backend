@@ -5,13 +5,13 @@ class Repo {
     log.repo("Start CREATE Entity at Repo");
 
     try {
-      const _ = await entity.create(body, { transaction: tx });
+      const { id } = await entity.create(body, { transaction: tx });
 
       log.repo("Finish CREATE Entity at Repo");
-      return null;
+      return [id, null];
     } catch (error) {
       log.error("Finish CREATE Entity at Repo with error", error);
-      return error;
+      return [null, error];
     }
   }
 

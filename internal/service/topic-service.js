@@ -16,7 +16,7 @@ class TopicService extends TopicRepo {
 
     try {
       //insert new topic
-      var err = await this.CREATE(tx, this.Topics, body);
+      var [id, err] = await this.CREATE(tx, this.Topics, body);
       if (err !== null) {
         throw new Error(err);
       }

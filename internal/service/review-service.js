@@ -35,7 +35,7 @@ class ReviewService extends ReviewRepo {
         body.user_id = user_id;
       }
 
-      var err = await this.CREATE(tx, this.Reviews, body);
+      var [id, err] = await this.CREATE(tx, this.Reviews, body);
       if (err !== null) {
         throw new Error(err);
       }

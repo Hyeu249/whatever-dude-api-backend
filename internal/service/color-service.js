@@ -16,7 +16,7 @@ class ColorService extends ColorRepo {
 
     try {
       //insert new color
-      var err = await this.CREATE(tx, this.Colors, body);
+      var [id, err] = await this.CREATE(tx, this.Colors, body);
       if (err !== null) {
         throw new Error(err);
       }
