@@ -182,7 +182,7 @@ class ItemService extends ItemRepo {
         }
       }
 
-      if (isArray(color_ids)) {
+      if (isArray(body.color_ids)) {
         var err = await this.DELETE_BY_WHERE(tx, this.ItemsColorsRelations, { item_id });
         if (err !== null) {
           throw new Error(err);
