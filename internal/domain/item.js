@@ -20,7 +20,23 @@ const itemCreateRequest = {
   },
   price: {
     type: types.NUMBER,
+    validate: ["required"],
+  },
+  topic_ids: {
+    type: types.ARRAY,
     validate: [],
+  },
+  gender_ids: {
+    type: types.ARRAY,
+    validate: [],
+  },
+  color_ids: {
+    type: types.ARRAY,
+    validate: ["required"],
+  },
+  image_ids: {
+    type: types.ARRAY,
+    validate: ["required"],
   },
 };
 
@@ -35,6 +51,22 @@ const itemUpdateRequest = {
   },
   price: {
     type: types.NUMBER,
+    validate: [],
+  },
+  topic_ids: {
+    type: types.ARRAY,
+    validate: [],
+  },
+  gender_ids: {
+    type: types.ARRAY,
+    validate: [],
+  },
+  color_ids: {
+    type: types.ARRAY,
+    validate: [],
+  },
+  image_ids: {
+    type: types.ARRAY,
     validate: [],
   },
 };
@@ -62,6 +94,22 @@ const itemListRequest = {
   },
   price: {
     type: types.NUMBER,
+    validate: [],
+  },
+  topic_id: {
+    type: types.ARRAY,
+    validate: [],
+  },
+  gender_id: {
+    type: types.ARRAY,
+    validate: [],
+  },
+  color_id: {
+    type: types.ARRAY,
+    validate: [],
+  },
+  image_id: {
+    type: types.ARRAY,
     validate: [],
   },
 };
