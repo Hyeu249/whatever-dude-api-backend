@@ -54,23 +54,27 @@ class ItemRepo extends Repo {
           include: [
             {
               model: Topics,
-              attributes: ["id", "name"],
+              attributes: [],
               where: have(body.topic_ids) && TOPIC_CONDITIONS,
+              through: { attributes: [] },
             },
             {
               model: Genders,
-              attributes: ["id", "name"],
+              attributes: [],
               where: have(body.gender_ids) && GENDER_CONDITIONS,
+              through: { attributes: [] },
             },
             {
               model: Colors,
-              attributes: ["id", "name", "hex_code"],
+              attributes: ["hex_code"],
               where: have(body.color_ids) && COLOR_CONDITIONS,
+              through: { attributes: [] },
             },
             {
               model: Images,
-              attributes: ["id", "location"],
+              attributes: ["location"],
               where: have(body.image_ids) && IMAGE_CONDITIONS,
+              through: { attributes: [] },
             },
           ],
           where: conditions,
