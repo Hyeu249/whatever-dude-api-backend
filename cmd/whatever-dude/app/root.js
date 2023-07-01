@@ -73,6 +73,7 @@ async function server({ argv }) {
     app.use(http.attachColorServiceHTTPHandler());
     app.use(http.attachReviewServiceHTTPHandler());
     app.use(http.attachOrderServiceHTTPHandler());
+    app.use(http.attachItemServiceHTTPHandler());
     app.use(...middleware);
 
     //start server
