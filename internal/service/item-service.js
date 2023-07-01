@@ -3,8 +3,6 @@ const log = require("@server/lib/log");
 const help = require("@server/lib/help");
 const domain = require("@server/internal/domain");
 
-const isArrayNotEmpty = (arr = []) => arr.length > 0;
-
 class ItemService extends ItemRepo {
   constructor(db) {
     super();
@@ -17,26 +15,22 @@ class ItemService extends ItemRepo {
     const tx = await db.transaction();
 
     try {
-      if (isArrayNotEmpty(body.topic_ids)) {
-        for (const topic_id of body.topic_ids) {
-          var [isTopicExist, err] = await this.IS_ENTITY_EXIST(tx, this.Topics, topic_id);
-          if (err !== null) {
-            throw new Error(err);
-          }
-          if (!isTopicExist) {
-            throw new Error(domain.topicIsNotFound);
-          }
+      for (const topic_id of body.topic_ids) {
+        var [isTopicExist, err] = await this.IS_ENTITY_EXIST(tx, this.Topics, topic_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isTopicExist) {
+          throw new Error(domain.topicIsNotFound);
         }
       }
-      if (isArrayNotEmpty(body.gender_ids)) {
-        for (const gender_id of body.gender_ids) {
-          var [isGenderExist, err] = await this.IS_ENTITY_EXIST(tx, this.Genders, gender_id);
-          if (err !== null) {
-            throw new Error(err);
-          }
-          if (!isGenderExist) {
-            throw new Error(domain.genderIsNotFound);
-          }
+      for (const gender_id of body.gender_ids) {
+        var [isGenderExist, err] = await this.IS_ENTITY_EXIST(tx, this.Genders, gender_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isGenderExist) {
+          throw new Error(domain.genderIsNotFound);
         }
       }
 
@@ -65,20 +59,16 @@ class ItemService extends ItemRepo {
         throw new Error(err);
       }
 
-      if (isArrayNotEmpty(body.topic_ids)) {
-        for (const topic_id of body.topic_ids) {
-          var [_, err] = await this.CREATE(tx, this.ItemsTopicsRelations, { item_id, topic_id });
-          if (err !== null) {
-            throw new Error(err);
-          }
+      for (const topic_id of body.topic_ids) {
+        var [_, err] = await this.CREATE(tx, this.ItemsTopicsRelations, { item_id, topic_id });
+        if (err !== null) {
+          throw new Error(err);
         }
       }
-      if (isArrayNotEmpty(body.gender_ids)) {
-        for (const gender_id of body.gender_ids) {
-          var [_, err] = await this.CREATE(tx, this.ItemsGendersRelations, { item_id, gender_id });
-          if (err !== null) {
-            throw new Error(err);
-          }
+      for (const gender_id of body.gender_ids) {
+        var [_, err] = await this.CREATE(tx, this.ItemsGendersRelations, { item_id, gender_id });
+        if (err !== null) {
+          throw new Error(err);
         }
       }
 
@@ -112,49 +102,41 @@ class ItemService extends ItemRepo {
     const tx = await db.transaction();
 
     try {
-      if (isArrayNotEmpty(body.topic_ids)) {
-        for (const topic_id of body.topic_ids) {
-          var [isTopicExist, err] = await this.IS_ENTITY_EXIST(tx, this.Topics, topic_id);
-          if (err !== null) {
-            throw new Error(err);
-          }
-          if (!isTopicExist) {
-            throw new Error(domain.topicIsNotFound);
-          }
+      for (const topic_id of body.topic_ids) {
+        var [isTopicExist, err] = await this.IS_ENTITY_EXIST(tx, this.Topics, topic_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isTopicExist) {
+          throw new Error(domain.topicIsNotFound);
         }
       }
-      if (isArrayNotEmpty(body.gender_ids)) {
-        for (const gender_id of body.gender_ids) {
-          var [isGenderExist, err] = await this.IS_ENTITY_EXIST(tx, this.Genders, gender_id);
-          if (err !== null) {
-            throw new Error(err);
-          }
-          if (!isGenderExist) {
-            throw new Error(domain.genderIsNotFound);
-          }
+      for (const gender_id of body.gender_ids) {
+        var [isGenderExist, err] = await this.IS_ENTITY_EXIST(tx, this.Genders, gender_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isGenderExist) {
+          throw new Error(domain.genderIsNotFound);
         }
       }
 
-      if (isArrayNotEmpty(body.color_ids)) {
-        for (const color_id of body.color_ids) {
-          var [isColorExist, err] = await this.IS_ENTITY_EXIST(tx, this.Colors, color_id);
-          if (err !== null) {
-            throw new Error(err);
-          }
-          if (!isColorExist) {
-            throw new Error(domain.colorIsNotFound);
-          }
+      for (const color_id of body.color_ids) {
+        var [isColorExist, err] = await this.IS_ENTITY_EXIST(tx, this.Colors, color_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isColorExist) {
+          throw new Error(domain.colorIsNotFound);
         }
       }
-      if (isArrayNotEmpty(body.image_ids)) {
-        for (const image_id of body.image_ids) {
-          var [isImageExist, err] = await this.IS_ENTITY_EXIST(tx, this.Images, image_id);
-          if (err !== null) {
-            throw new Error(err);
-          }
-          if (!isImageExist) {
-            throw new Error(domain.imageIsNotFound);
-          }
+      for (const image_id of body.image_ids) {
+        var [isImageExist, err] = await this.IS_ENTITY_EXIST(tx, this.Images, image_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isImageExist) {
+          throw new Error(domain.imageIsNotFound);
         }
       }
 
@@ -172,55 +154,47 @@ class ItemService extends ItemRepo {
         throw new Error(err);
       }
 
-      if (isArrayNotEmpty(body.topic_ids)) {
-        var err = await this.DELETE_BY_WHERE(tx, this.ItemsTopicsRelations, { item_id });
+      var err = await this.DELETE_BY_WHERE(tx, this.ItemsTopicsRelations, { item_id });
+      if (err !== null) {
+        throw new Error(err);
+      }
+      for (const topic_id of body.topic_ids) {
+        var [_, err] = await this.CREATE(tx, this.ItemsTopicsRelations, { item_id, topic_id });
         if (err !== null) {
           throw new Error(err);
-        }
-        for (const topic_id of body.topic_ids) {
-          var [_, err] = await this.CREATE(tx, this.ItemsTopicsRelations, { item_id, topic_id });
-          if (err !== null) {
-            throw new Error(err);
-          }
         }
       }
 
-      if (isArrayNotEmpty(body.gender_ids)) {
-        var err = await this.DELETE_BY_WHERE(tx, this.ItemsGendersRelations, { item_id });
+      var err = await this.DELETE_BY_WHERE(tx, this.ItemsGendersRelations, { item_id });
+      if (err !== null) {
+        throw new Error(err);
+      }
+      for (const gender_id of body.gender_ids) {
+        var [_, err] = await this.CREATE(tx, this.ItemsGendersRelations, { item_id, gender_id });
         if (err !== null) {
           throw new Error(err);
-        }
-        for (const gender_id of body.gender_ids) {
-          var [_, err] = await this.CREATE(tx, this.ItemsGendersRelations, { item_id, gender_id });
-          if (err !== null) {
-            throw new Error(err);
-          }
         }
       }
 
-      if (isArrayNotEmpty(body.color_ids)) {
-        var err = await this.DELETE_BY_WHERE(tx, this.ItemsColorsRelations, { item_id });
+      var err = await this.DELETE_BY_WHERE(tx, this.ItemsColorsRelations, { item_id });
+      if (err !== null) {
+        throw new Error(err);
+      }
+      for (const color_id of body.color_ids) {
+        var [_, err] = await this.CREATE(tx, this.ItemsColorsRelations, { item_id, color_id });
         if (err !== null) {
           throw new Error(err);
-        }
-        for (const color_id of body.color_ids) {
-          var [_, err] = await this.CREATE(tx, this.ItemsColorsRelations, { item_id, color_id });
-          if (err !== null) {
-            throw new Error(err);
-          }
         }
       }
 
-      if (isArrayNotEmpty(body.image_ids)) {
-        var err = await this.DELETE_BY_WHERE(tx, this.ItemsImagesRelations, { item_id });
+      var err = await this.DELETE_BY_WHERE(tx, this.ItemsImagesRelations, { item_id });
+      if (err !== null) {
+        throw new Error(err);
+      }
+      for (const image_id of body.image_ids) {
+        var [_, err] = await this.CREATE(tx, this.ItemsImagesRelations, { item_id, image_id });
         if (err !== null) {
           throw new Error(err);
-        }
-        for (const image_id of body.image_ids) {
-          var [_, err] = await this.CREATE(tx, this.ItemsImagesRelations, { item_id, image_id });
-          if (err !== null) {
-            throw new Error(err);
-          }
         }
       }
 
