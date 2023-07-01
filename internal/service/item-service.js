@@ -3,7 +3,7 @@ const log = require("@server/lib/log");
 const help = require("@server/lib/help");
 const domain = require("@server/internal/domain");
 
-const isNotArrayEmpty = (arr = []) => arr.length > 0;
+const isArrayNotEmpty = (arr = []) => arr.length > 0;
 
 class ItemService extends ItemRepo {
   constructor(db) {
@@ -12,12 +12,12 @@ class ItemService extends ItemRepo {
   }
 
   async serviceCreateItem(body) {
-    log.service("Start TOPIC CreateItem Service");
+    log.service("Start ITEM CreateItem Service");
     const db = this.db;
     const tx = await db.transaction();
 
     try {
-      if (isNotArrayEmpty(body.topic_ids)) {
+      if (isArrayNotEmpty(body.topic_ids)) {
         for (const topic_id of body.topic_ids) {
           var [isTopicExist, err] = await this.IS_ENTITY_EXIST(tx, this.Topics, topic_id);
           if (err !== null) {
@@ -28,7 +28,7 @@ class ItemService extends ItemRepo {
           }
         }
       }
-      if (isNotArrayEmpty(body.gender_ids)) {
+      if (isArrayNotEmpty(body.gender_ids)) {
         for (const gender_id of body.gender_ids) {
           var [isGenderExist, err] = await this.IS_ENTITY_EXIST(tx, this.Genders, gender_id);
           if (err !== null) {
@@ -65,7 +65,7 @@ class ItemService extends ItemRepo {
         throw new Error(err);
       }
 
-      if (isNotArrayEmpty(body.topic_ids)) {
+      if (isArrayNotEmpty(body.topic_ids)) {
         for (const topic_id of body.topic_ids) {
           var [_, err] = await this.CREATE(tx, this.ItemsTopicsRelations, { item_id, topic_id });
           if (err !== null) {
@@ -73,7 +73,7 @@ class ItemService extends ItemRepo {
           }
         }
       }
-      if (isNotArrayEmpty(body.gender_ids)) {
+      if (isArrayNotEmpty(body.gender_ids)) {
         for (const gender_id of body.gender_ids) {
           var [_, err] = await this.CREATE(tx, this.ItemsGendersRelations, { item_id, gender_id });
           if (err !== null) {
@@ -96,22 +96,68 @@ class ItemService extends ItemRepo {
       }
 
       await tx.commit();
-      log.service("Finish TOPIC CreateItem Service");
+      log.service("Finish ITEM CreateItem Service");
       return null;
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
-      log.error("Finish TOPIC CreateItem Service with error", error);
+      log.error("Finish ITEM CreateItem Service with error", error);
       return parseError;
     }
   }
 
   async serviceUpdateItem(body, item_id) {
-    log.service("Start TOPIC UpdateItem Service");
+    log.service("Start ITEM UpdateItem Service");
     const db = this.db;
     const tx = await db.transaction();
 
     try {
+      if (isArrayNotEmpty(body.topic_ids)) {
+        for (const topic_id of body.topic_ids) {
+          var [isTopicExist, err] = await this.IS_ENTITY_EXIST(tx, this.Topics, topic_id);
+          if (err !== null) {
+            throw new Error(err);
+          }
+          if (!isTopicExist) {
+            throw new Error(domain.topicIsNotFound);
+          }
+        }
+      }
+      if (isArrayNotEmpty(body.gender_ids)) {
+        for (const gender_id of body.gender_ids) {
+          var [isGenderExist, err] = await this.IS_ENTITY_EXIST(tx, this.Genders, gender_id);
+          if (err !== null) {
+            throw new Error(err);
+          }
+          if (!isGenderExist) {
+            throw new Error(domain.genderIsNotFound);
+          }
+        }
+      }
+
+      if (isArrayNotEmpty(body.color_ids)) {
+        for (const color_id of body.color_ids) {
+          var [isColorExist, err] = await this.IS_ENTITY_EXIST(tx, this.Colors, color_id);
+          if (err !== null) {
+            throw new Error(err);
+          }
+          if (!isColorExist) {
+            throw new Error(domain.colorIsNotFound);
+          }
+        }
+      }
+      if (isArrayNotEmpty(body.image_ids)) {
+        for (const image_id of body.image_ids) {
+          var [isImageExist, err] = await this.IS_ENTITY_EXIST(tx, this.Images, image_id);
+          if (err !== null) {
+            throw new Error(err);
+          }
+          if (!isImageExist) {
+            throw new Error(domain.imageIsNotFound);
+          }
+        }
+      }
+
       var [isItemExist, err] = await this.IS_ENTITY_EXIST(tx, this.Items, item_id);
       if (err !== null) {
         throw new Error(err);
@@ -126,20 +172,72 @@ class ItemService extends ItemRepo {
         throw new Error(err);
       }
 
+      if (isArrayNotEmpty(body.topic_ids)) {
+        var err = await this.DELETE_BY_WHERE(tx, this.ItemsTopicsRelations, { item_id });
+        if (err !== null) {
+          throw new Error(err);
+        }
+        for (const topic_id of body.topic_ids) {
+          var [_, err] = await this.CREATE(tx, this.ItemsTopicsRelations, { item_id, topic_id });
+          if (err !== null) {
+            throw new Error(err);
+          }
+        }
+      }
+
+      if (isArrayNotEmpty(body.gender_ids)) {
+        var err = await this.DELETE_BY_WHERE(tx, this.ItemsGendersRelations, { item_id });
+        if (err !== null) {
+          throw new Error(err);
+        }
+        for (const gender_id of body.gender_ids) {
+          var [_, err] = await this.CREATE(tx, this.ItemsGendersRelations, { item_id, gender_id });
+          if (err !== null) {
+            throw new Error(err);
+          }
+        }
+      }
+
+      if (isArrayNotEmpty(body.color_ids)) {
+        var err = await this.DELETE_BY_WHERE(tx, this.ItemsColorsRelations, { item_id });
+        if (err !== null) {
+          throw new Error(err);
+        }
+        for (const color_id of body.color_ids) {
+          var [_, err] = await this.CREATE(tx, this.ItemsColorsRelations, { item_id, color_id });
+          if (err !== null) {
+            throw new Error(err);
+          }
+        }
+      }
+
+      if (isArrayNotEmpty(body.image_ids)) {
+        var err = await this.DELETE_BY_WHERE(tx, this.ItemsImagesRelations, { item_id });
+        if (err !== null) {
+          throw new Error(err);
+        }
+        for (const image_id of body.image_ids) {
+          var [_, err] = await this.CREATE(tx, this.ItemsImagesRelations, { item_id, image_id });
+          if (err !== null) {
+            throw new Error(err);
+          }
+        }
+      }
+
       await tx.commit();
-      log.service("Finish TOPIC UpdateItem Service");
+      log.service("Finish ITEM UpdateItem Service");
       return null;
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
 
-      log.error("Finish TOPIC UpdateItem Service with error", error);
+      log.error("Finish ITEM UpdateItem Service with error", error);
       return parseError;
     }
   }
 
   async serviceGetItem(body) {
-    log.service("Start TOPIC GetItem Service");
+    log.service("Start ITEM GetItem Service");
     const db = this.db;
     const tx = await db.transaction();
 
@@ -161,19 +259,19 @@ class ItemService extends ItemRepo {
       }
 
       await tx.commit();
-      log.service("Finish TOPIC GetItem Service");
+      log.service("Finish ITEM GetItem Service");
       return [items, null];
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
 
-      log.error("Finish TOPIC GetItem Service with error", error);
+      log.error("Finish ITEM GetItem Service with error", error);
       return [null, parseError];
     }
   }
 
   async serviceDeleteItem(item_id) {
-    log.service("Start TOPIC DeleteItem Service");
+    log.service("Start ITEM DeleteItem Service");
     const db = this.db;
     const tx = await db.transaction();
 
@@ -194,13 +292,13 @@ class ItemService extends ItemRepo {
       }
 
       await tx.commit();
-      log.service("Finish TOPIC DeleteItem Service");
+      log.service("Finish ITEM DeleteItem Service");
       return null;
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
 
-      log.error("Finish TOPIC DeleteItem Service with error", error);
+      log.error("Finish ITEM DeleteItem Service with error", error);
       return parseError;
     }
   }

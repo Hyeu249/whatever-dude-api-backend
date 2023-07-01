@@ -94,6 +94,20 @@ class Repo {
       return [null, error];
     }
   }
+
+  async DELETE_BY_WHERE(tx, entity, where) {
+    log.repo("Start DELETE_BY_WHERE Entity at Repo");
+
+    try {
+      const _ = await entity.destroy({ where }, { transaction: tx });
+
+      log.repo("Finish DELETE_BY_WHERE Entity at Repo");
+      return null;
+    } catch (error) {
+      log.error("Finish DELETE_BY_WHERE Entity at Repo with error", error);
+      return error;
+    }
+  }
   async READ_BY_ID() {}
 }
 
