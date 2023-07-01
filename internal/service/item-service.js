@@ -226,6 +226,46 @@ class ItemService extends ItemRepo {
     const tx = await db.transaction();
 
     try {
+      if (body.topic_id !== undefined) {
+        var [isTopicExist, err] = await this.IS_ENTITY_EXIST(tx, this.Topics, topic_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isTopicExist) {
+          throw new Error(domain.topicIsNotFound);
+        }
+      }
+
+      if (body.gender_id !== undefined) {
+        var [isGenderExist, err] = await this.IS_ENTITY_EXIST(tx, this.Genders, gender_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isGenderExist) {
+          throw new Error(domain.genderIsNotFound);
+        }
+      }
+
+      if (body.color_id !== undefined) {
+        var [isColorExist, err] = await this.IS_ENTITY_EXIST(tx, this.Colors, color_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isColorExist) {
+          throw new Error(domain.colorIsNotFound);
+        }
+      }
+
+      if (body.image_id !== undefined) {
+        var [isImageExist, err] = await this.IS_ENTITY_EXIST(tx, this.Images, image_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isImageExist) {
+          throw new Error(domain.imageIsNotFound);
+        }
+      }
+
       if (body.id !== undefined) {
         var [isItemExist, err] = await this.IS_ENTITY_EXIST(tx, this.Items, body.id);
         if (err !== null) {
@@ -237,7 +277,7 @@ class ItemService extends ItemRepo {
       }
 
       //get items
-      var [items, err] = await this.READ(tx, this.Items, body);
+      var [items, err] = await this.READ_ITEM_AND_RELATED(tx, body);
       if (err !== null) {
         throw new Error(err);
       }
