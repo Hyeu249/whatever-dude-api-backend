@@ -96,6 +96,14 @@ const itemListRequest = {
     type: types.NUMBER,
     validate: [],
   },
+  price_start: {
+    type: types.NUMBER,
+    validate: [],
+  },
+  price_end: {
+    type: types.NUMBER,
+    validate: [],
+  },
   topic_ids: {
     type: types.ARRAY,
     validate: [],

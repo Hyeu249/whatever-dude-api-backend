@@ -42,6 +42,8 @@ class ItemRepo extends Repo {
     if (body.name !== undefined) conditions.name = body.name;
     if (body.description !== undefined) conditions.description = body.description;
     if (body.price !== undefined) conditions.price = body.price;
+    if (body.price_start !== undefined) conditions.price = { [Op.gte]: body.price_start };
+    if (body.price_end !== undefined) conditions.price = { [Op.lte]: body.price_end };
 
     const TOPIC_CONDITIONS = { id: { [Op.in]: body.topic_ids || [] } };
     const GENDER_CONDITIONS = { id: { [Op.in]: body.gender_ids || [] } };
