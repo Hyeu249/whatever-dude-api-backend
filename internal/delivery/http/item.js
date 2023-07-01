@@ -29,6 +29,14 @@ class ItemHandler extends ItemService {
         var err = await this.serviceCreateItem(body);
         if (err !== null) {
           switch (err) {
+            case domain.topicIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.topicIsNotFound });
+            case domain.genderIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.genderIsNotFound });
+            case domain.colorIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.colorIsNotFound });
+            case domain.imageIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
             default:
               return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
           }

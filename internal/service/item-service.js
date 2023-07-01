@@ -3,6 +3,8 @@ const log = require("@server/lib/log");
 const help = require("@server/lib/help");
 const domain = require("@server/internal/domain");
 
+const isNotArrayEmpty = (arr = []) => arr.length > 0;
+
 class ItemService extends ItemRepo {
   constructor(db) {
     super();
@@ -15,10 +17,82 @@ class ItemService extends ItemRepo {
     const tx = await db.transaction();
 
     try {
+      if (isNotArrayEmpty(body.topic_ids)) {
+        for (const topic_id of body.topic_ids) {
+          var [isTopicExist, err] = await this.IS_ENTITY_EXIST(tx, this.Topics, topic_id);
+          if (err !== null) {
+            throw new Error(err);
+          }
+          if (!isTopicExist) {
+            throw new Error(domain.topicIsNotFound);
+          }
+        }
+      }
+      if (isNotArrayEmpty(body.gender_ids)) {
+        for (const gender_id of body.gender_ids) {
+          var [isGenderExist, err] = await this.IS_ENTITY_EXIST(tx, this.Genders, gender_id);
+          if (err !== null) {
+            throw new Error(err);
+          }
+          if (!isGenderExist) {
+            throw new Error(domain.genderIsNotFound);
+          }
+        }
+      }
+
+      for (const color_id of body.color_ids) {
+        var [isColorExist, err] = await this.IS_ENTITY_EXIST(tx, this.Colors, color_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isColorExist) {
+          throw new Error(domain.colorIsNotFound);
+        }
+      }
+      for (const image_id of body.image_ids) {
+        var [isImageExist, err] = await this.IS_ENTITY_EXIST(tx, this.Images, image_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isImageExist) {
+          throw new Error(domain.imageIsNotFound);
+        }
+      }
+
       //insert new item
-      var [id, err] = await this.CREATE(tx, this.Items, body);
+      var [item_id, err] = await this.CREATE(tx, this.Items, body);
       if (err !== null) {
         throw new Error(err);
+      }
+
+      if (isNotArrayEmpty(body.topic_ids)) {
+        for (const topic_id of body.topic_ids) {
+          var [_, err] = await this.CREATE(tx, this.ItemsTopicsRelations, { item_id, topic_id });
+          if (err !== null) {
+            throw new Error(err);
+          }
+        }
+      }
+      if (isNotArrayEmpty(body.gender_ids)) {
+        for (const gender_id of body.gender_ids) {
+          var [_, err] = await this.CREATE(tx, this.ItemsGendersRelations, { item_id, gender_id });
+          if (err !== null) {
+            throw new Error(err);
+          }
+        }
+      }
+
+      for (const color_id of body.color_ids) {
+        var [_, err] = await this.CREATE(tx, this.ItemsColorsRelations, { item_id, color_id });
+        if (err !== null) {
+          throw new Error(err);
+        }
+      }
+      for (const image_id of body.image_ids) {
+        var [_, err] = await this.CREATE(tx, this.ItemsImagesRelations, { item_id, image_id });
+        if (err !== null) {
+          throw new Error(err);
+        }
       }
 
       await tx.commit();
