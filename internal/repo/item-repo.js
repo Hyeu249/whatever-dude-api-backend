@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const Repo = require("./index");
 const log = require("@server/lib/log");
 const { Items } = require("@server/lib/sequelize/items");
@@ -10,6 +11,8 @@ const { ItemsTopicsRelations } = require("@server/lib/sequelize/itemsTopicsRelat
 const { ItemsGendersRelations } = require("@server/lib/sequelize/itemsGendersRelations");
 const { ItemsColorsRelations } = require("@server/lib/sequelize/itemsColorsRelations");
 const { ItemsImagesRelations } = require("@server/lib/sequelize/itemsImagesRelations");
+
+const have = (value) => Array.isArray(value) && value.length > 0;
 
 class ItemRepo extends Repo {
   constructor() {
@@ -40,6 +43,11 @@ class ItemRepo extends Repo {
     if (body.description !== undefined) conditions.description = body.description;
     if (body.price !== undefined) conditions.price = body.price;
 
+    const TOPIC_CONDITIONS = { id: { [Op.in]: body.topic_ids || [] } };
+    const GENDER_CONDITIONS = { id: { [Op.in]: body.gender_ids || [] } };
+    const COLOR_CONDITIONS = { id: { [Op.in]: body.color_ids || [] } };
+    const IMAGE_CONDITIONS = { id: { [Op.in]: body.image_ids || [] } };
+
     try {
       const records = await Items.findAndCountAll(
         {
@@ -47,18 +55,22 @@ class ItemRepo extends Repo {
             {
               model: Topics,
               attributes: ["id", "name"],
+              where: have(body.topic_ids) && TOPIC_CONDITIONS,
             },
             {
               model: Genders,
               attributes: ["id", "name"],
+              where: have(body.gender_ids) && GENDER_CONDITIONS,
             },
             {
               model: Colors,
               attributes: ["id", "name", "hex_code"],
+              where: have(body.color_ids) && COLOR_CONDITIONS,
             },
             {
               model: Images,
               attributes: ["id", "location"],
+              where: have(body.image_ids) && IMAGE_CONDITIONS,
             },
           ],
           where: conditions,
