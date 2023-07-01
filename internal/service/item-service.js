@@ -226,7 +226,7 @@ class ItemService extends ItemRepo {
     const tx = await db.transaction();
 
     try {
-      if (body.topic_id !== undefined) {
+      for (const topic_id of body.topic_ids || []) {
         var [isTopicExist, err] = await this.IS_ENTITY_EXIST(tx, this.Topics, topic_id);
         if (err !== null) {
           throw new Error(err);
@@ -235,8 +235,7 @@ class ItemService extends ItemRepo {
           throw new Error(domain.topicIsNotFound);
         }
       }
-
-      if (body.gender_id !== undefined) {
+      for (const gender_id of body.gender_ids || []) {
         var [isGenderExist, err] = await this.IS_ENTITY_EXIST(tx, this.Genders, gender_id);
         if (err !== null) {
           throw new Error(err);
@@ -246,7 +245,7 @@ class ItemService extends ItemRepo {
         }
       }
 
-      if (body.color_id !== undefined) {
+      for (const color_id of body.color_ids || []) {
         var [isColorExist, err] = await this.IS_ENTITY_EXIST(tx, this.Colors, color_id);
         if (err !== null) {
           throw new Error(err);
@@ -255,8 +254,7 @@ class ItemService extends ItemRepo {
           throw new Error(domain.colorIsNotFound);
         }
       }
-
-      if (body.image_id !== undefined) {
+      for (const image_id of body.image_ids || []) {
         var [isImageExist, err] = await this.IS_ENTITY_EXIST(tx, this.Images, image_id);
         if (err !== null) {
           throw new Error(err);

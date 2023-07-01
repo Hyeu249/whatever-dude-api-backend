@@ -96,19 +96,19 @@ const itemListRequest = {
     type: types.NUMBER,
     validate: [],
   },
-  topic_id: {
+  topic_ids: {
     type: types.ARRAY,
     validate: [],
   },
-  gender_id: {
+  gender_ids: {
     type: types.ARRAY,
     validate: [],
   },
-  color_id: {
+  color_ids: {
     type: types.ARRAY,
     validate: [],
   },
-  image_id: {
+  image_ids: {
     type: types.ARRAY,
     validate: [],
   },
