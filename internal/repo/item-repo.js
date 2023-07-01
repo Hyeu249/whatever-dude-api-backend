@@ -26,7 +26,7 @@ class ItemRepo extends Repo {
   }
 
   async READ_ITEM_AND_RELATED(tx, body) {
-    log.repo("Start ITEM Entity at Repo");
+    log.repo("Start ITEM READ_ITEM_AND_RELATED at Repo");
     let offset = 0;
     let limit = 20;
 
@@ -35,14 +35,36 @@ class ItemRepo extends Repo {
     if (body.offset !== undefined) offset = body.offset;
     if (body.limit !== undefined) limit = body.limit;
 
-    for (const [key, value] of Object.entries(body)) {
-      if (value === undefined) continue;
-      conditions[key] = value;
-    }
+    if (body.id !== undefined) conditions.id = body.id;
+    if (body.name !== undefined) conditions.name = body.name;
+    if (body.description !== undefined) conditions.description = body.description;
+    if (body.price !== undefined) conditions.price = body.price;
 
     try {
-      const records = await entity.findAndCountAll(
+      const records = await Items.findAndCountAll(
         {
+          include: [
+            {
+              model: ItemsTopicsRelations,
+              attributes: ["id"],
+              include: [{ model: Topics, attributes: ["id", "name"], where: { topic_id: body.topic_id } }],
+            },
+            {
+              model: ItemsGendersRelations,
+              attributes: ["id"],
+              include: [{ model: Genders, attributes: ["id", "name"], where: { gender_id: body.gender_id } }],
+            },
+            {
+              model: ItemsColorsRelations,
+              attributes: ["id"],
+              include: [{ model: Colors, attributes: ["id", "name", "hex_code"], color_id: body.color_id }],
+            },
+            {
+              model: ItemsImagesRelations,
+              attributes: ["id"],
+              include: [{ model: Images, attributes: ["id", "location"], where: { image_id: body.image_id } }],
+            },
+          ],
           where: conditions,
           offset: Number(offset),
           limit: Number(limit),
@@ -50,10 +72,10 @@ class ItemRepo extends Repo {
         { transaction: tx }
       );
 
-      log.repo("Finish ITEM Entity at Repo");
+      log.repo("Finish ITEM READ_ITEM_AND_RELATED at Repo");
       return [records, null];
     } catch (error) {
-      log.error("Finish ITEM Entity at Repo with error", error);
+      log.error("Finish ITEM READ_ITEM_AND_RELATED at Repo with error", error);
       return [null, error];
     }
   }
