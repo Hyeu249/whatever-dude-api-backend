@@ -115,6 +115,8 @@ class ItemHandler extends ItemService {
               return res.status(NOT_FOUND).send({ message: domain.itemIsNotFound });
             case domain.topicIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.topicIsNotFound });
+            case domain.categoryIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.categoryIsNotFound });
             case domain.genderIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.genderIsNotFound });
             case domain.colorIsNotFound:

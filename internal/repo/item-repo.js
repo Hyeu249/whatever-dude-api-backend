@@ -1,12 +1,14 @@
 const { Op } = require("sequelize");
 const Repo = require("./index");
 const log = require("@server/lib/log");
+const { Categories } = require("@server/lib/sequelize/categories");
 const { Items } = require("@server/lib/sequelize/items");
 const { Topics } = require("@server/lib/sequelize/topics");
 const { Genders } = require("@server/lib/sequelize/genders");
 const { Colors } = require("@server/lib/sequelize/colors");
 const { Images } = require("@server/lib/sequelize/images");
 
+const { CategoriesItemsRelations } = require("@server/lib/sequelize/categoriesItemsRelations");
 const { ItemsTopicsRelations } = require("@server/lib/sequelize/itemsTopicsRelations");
 const { ItemsGendersRelations } = require("@server/lib/sequelize/itemsGendersRelations");
 const { ItemsColorsRelations } = require("@server/lib/sequelize/itemsColorsRelations");
@@ -18,10 +20,12 @@ class ItemRepo extends Repo {
   constructor() {
     super();
     this.Items = Items;
+    this.Categories = Categories;
     this.Topics = Topics;
     this.Genders = Genders;
     this.Colors = Colors;
     this.Images = Images;
+    this.CategoriesItemsRelations = CategoriesItemsRelations;
     this.ItemsTopicsRelations = ItemsTopicsRelations;
     this.ItemsGendersRelations = ItemsGendersRelations;
     this.ItemsColorsRelations = ItemsColorsRelations;
@@ -45,6 +49,7 @@ class ItemRepo extends Repo {
     if (body.price_start !== undefined) conditions.price = { [Op.gte]: body.price_start };
     if (body.price_end !== undefined) conditions.price = { [Op.lte]: body.price_end };
 
+    const CATEGORY_CONDITIONS = { id: { [Op.in]: body.category_ids || [] } };
     const TOPIC_CONDITIONS = { id: { [Op.in]: body.topic_ids || [] } };
     const GENDER_CONDITIONS = { id: { [Op.in]: body.gender_ids || [] } };
     const COLOR_CONDITIONS = { id: { [Op.in]: body.color_ids || [] } };
@@ -53,7 +58,14 @@ class ItemRepo extends Repo {
     try {
       const records = await Items.findAndCountAll(
         {
+          distinct: true,
           include: [
+            {
+              model: Categories,
+              attributes: [],
+              where: have(body.category_ids) && CATEGORY_CONDITIONS,
+              through: { attributes: [] },
+            },
             {
               model: Topics,
               attributes: [],

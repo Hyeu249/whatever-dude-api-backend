@@ -53,6 +53,10 @@ const itemUpdateRequest = {
     type: types.NUMBER,
     validate: [],
   },
+  category_ids: {
+    type: types.ARRAY,
+    validate: [],
+  },
   topic_ids: {
     type: types.ARRAY,
     validate: [],
