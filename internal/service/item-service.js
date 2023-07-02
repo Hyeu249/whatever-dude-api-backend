@@ -120,6 +120,15 @@ class ItemService extends ItemRepo {
     const tx = await db.transaction();
 
     try {
+      for (const category_id of body.category_ids || []) {
+        var [isCategoryExist, err] = await this.IS_ENTITY_EXIST(tx, this.Categories, category_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isCategoryExist) {
+          throw new Error(domain.categoryIsNotFound);
+        }
+      }
       for (const topic_id of body.topic_ids || []) {
         var [isTopicExist, err] = await this.IS_ENTITY_EXIST(tx, this.Topics, topic_id);
         if (err !== null) {
@@ -170,6 +179,19 @@ class ItemService extends ItemRepo {
       var err = await this.UPDATE(tx, this.Items, body, item_id);
       if (err !== null) {
         throw new Error(err);
+      }
+
+      if (isArray(body.category_ids)) {
+        var err = await this.DELETE_BY_WHERE(tx, this.CategoriesItemsRelations, { item_id });
+        if (err !== null) {
+          throw new Error(err);
+        }
+        for (const category_id of body.category_ids) {
+          var [_, err] = await this.CREATE(tx, this.CategoriesItemsRelations, { item_id, category_id });
+          if (err !== null) {
+            throw new Error(err);
+          }
+        }
       }
 
       if (isArray(body.topic_ids)) {

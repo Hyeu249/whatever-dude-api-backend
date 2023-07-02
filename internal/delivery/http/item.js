@@ -74,6 +74,8 @@ class ItemHandler extends ItemService {
           switch (err) {
             case domain.itemIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.itemIsNotFound });
+            case domain.categoryIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.categoryIsNotFound });
             case domain.topicIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.topicIsNotFound });
             case domain.genderIsNotFound:
