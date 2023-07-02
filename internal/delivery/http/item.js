@@ -29,6 +29,8 @@ class ItemHandler extends ItemService {
         var err = await this.serviceCreateItem(body);
         if (err !== null) {
           switch (err) {
+            case domain.categoryIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.categoryIsNotFound });
             case domain.topicIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.topicIsNotFound });
             case domain.genderIsNotFound:
@@ -113,10 +115,10 @@ class ItemHandler extends ItemService {
           switch (err) {
             case domain.itemIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.itemIsNotFound });
-            case domain.topicIsNotFound:
-              return res.status(NOT_FOUND).send({ message: domain.topicIsNotFound });
             case domain.categoryIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.categoryIsNotFound });
+            case domain.topicIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.topicIsNotFound });
             case domain.genderIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.genderIsNotFound });
             case domain.colorIsNotFound:

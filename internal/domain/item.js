@@ -22,6 +22,10 @@ const itemCreateRequest = {
     type: types.NUMBER,
     validate: ["required"],
   },
+  category_ids: {
+    type: types.ARRAY,
+    validate: [],
+  },
   topic_ids: {
     type: types.ARRAY,
     validate: [],
@@ -106,6 +110,10 @@ const itemListRequest = {
   },
   price_end: {
     type: types.NUMBER,
+    validate: [],
+  },
+  category_ids: {
+    type: types.ARRAY,
     validate: [],
   },
   topic_ids: {
