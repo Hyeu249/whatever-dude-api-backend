@@ -284,7 +284,7 @@ class ItemService extends ItemRepo {
       }
 
       //get items
-      var [items, err] = await this.READ_ITEM_AND_RELATED(tx, body);
+      var [items, err] = await this.getItemsAndRelatedData(tx, body);
       if (err !== null) {
         throw new Error(err);
       }
