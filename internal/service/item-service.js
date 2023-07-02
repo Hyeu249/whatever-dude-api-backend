@@ -12,7 +12,7 @@ class ItemService extends ItemRepo {
   }
 
   async serviceCreateItem(body) {
-    log.service("Start ITEM CreateItem Service");
+    log.service("Start ITEM serviceCreateItem Service");
     const db = this.db;
     const tx = await db.transaction();
 
@@ -104,18 +104,18 @@ class ItemService extends ItemRepo {
       }
 
       await tx.commit();
-      log.service("Finish ITEM CreateItem Service");
+      log.service("Finish ITEM serviceCreateItem Service");
       return null;
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
-      log.error("Finish ITEM CreateItem Service with error", error);
+      log.error("Finish ITEM serviceCreateItem Service with error", error);
       return parseError;
     }
   }
 
   async serviceUpdateItem(body, item_id) {
-    log.service("Start ITEM UpdateItem Service");
+    log.service("Start ITEM serviceUpdateItem Service");
     const db = this.db;
     const tx = await db.transaction();
 
@@ -247,19 +247,19 @@ class ItemService extends ItemRepo {
       }
 
       await tx.commit();
-      log.service("Finish ITEM UpdateItem Service");
+      log.service("Finish ITEM serviceUpdateItem Service");
       return null;
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
 
-      log.error("Finish ITEM UpdateItem Service with error", error);
+      log.error("Finish ITEM serviceUpdateItem Service with error", error);
       return parseError;
     }
   }
 
-  async serviceGetItem(body) {
-    log.service("Start ITEM GetItem Service");
+  async serviceGetItems(body) {
+    log.service("Start ITEM serviceGetItems Service");
     const db = this.db;
     const tx = await db.transaction();
 
@@ -328,19 +328,19 @@ class ItemService extends ItemRepo {
       }
 
       await tx.commit();
-      log.service("Finish ITEM GetItem Service");
+      log.service("Finish ITEM serviceGetItems Service");
       return [items, null];
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
 
-      log.error("Finish ITEM GetItem Service with error", error);
+      log.error("Finish ITEM serviceGetItems Service with error", error);
       return [null, parseError];
     }
   }
 
   async serviceDeleteItem(item_id) {
-    log.service("Start ITEM DeleteItem Service");
+    log.service("Start ITEM serviceDeleteItem Service");
     const db = this.db;
     const tx = await db.transaction();
 
@@ -361,14 +361,46 @@ class ItemService extends ItemRepo {
       }
 
       await tx.commit();
-      log.service("Finish ITEM DeleteItem Service");
+      log.service("Finish ITEM serviceDeleteItem Service");
       return null;
     } catch (error) {
       await tx.rollback();
       const parseError = help.parseErrorMessage(error.message);
 
-      log.error("Finish ITEM DeleteItem Service with error", error);
+      log.error("Finish ITEM serviceDeleteItem Service with error", error);
       return parseError;
+    }
+  }
+
+  async serviceGetItemById(item_id) {
+    log.service("Start ITEM serviceGetItemById Service");
+    const db = this.db;
+    const tx = await db.transaction();
+
+    try {
+      var [isItemExist, err] = await this.IS_ENTITY_EXIST(tx, this.Items, item_id);
+      if (err !== null) {
+        throw new Error(err);
+      }
+      if (!isItemExist) {
+        throw new Error(domain.itemIsNotFound);
+      }
+
+      //get items
+      var [item, err] = await this.getItemByIdAndRelatedData(tx, item_id);
+      if (err !== null) {
+        throw new Error(err);
+      }
+
+      await tx.commit();
+      log.service("Finish ITEM serviceGetItemById Service");
+      return [item, null];
+    } catch (error) {
+      await tx.rollback();
+      const parseError = help.parseErrorMessage(error.message);
+
+      log.error("Finish ITEM serviceGetItemById Service with error", error);
+      return [null, parseError];
     }
   }
 }

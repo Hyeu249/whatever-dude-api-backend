@@ -18,7 +18,7 @@ const reviewCreateRequest = {
     type: types.STRING,
     validate: [],
   },
-  star: {
+  rating: {
     type: types.NUMBER,
     validate: ["required"],
   },
@@ -29,7 +29,7 @@ const reviewUpdateRequest = {
     type: types.STRING,
     validate: [],
   },
-  star: {
+  rating: {
     type: types.NUMBER,
     validate: [],
   },
@@ -56,7 +56,7 @@ const reviewListRequest = {
     type: types.STRING,
     validate: [],
   },
-  star: {
+  rating: {
     type: types.NUMBER,
     validate: [],
   },

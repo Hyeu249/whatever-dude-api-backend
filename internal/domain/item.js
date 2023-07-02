@@ -3,8 +3,9 @@ const types = require("@server/lib/types");
 const domains = {
   msgItemCreateSuccess: "Create item successfully.",
   msgItemUpdateSuccess: "Update item successfully.",
-  msgItemGetListSuccess: "Get list successfully.",
-  msgItemDeleteSuccess: "Delete item successfully.",
+  msgItemGetListSuccess: "Get item list successfully.",
+  msgItemDeleteSuccess: "Delete item item successfully.",
+  msgItemGetSuccess: "Get item successfully.",
 
   itemIsNotFound: "Item is not found.",
 };

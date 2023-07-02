@@ -115,8 +115,9 @@ class Http {
 
     router.post(g + "", handler.createItem());
     router.patch(g + "/:id", handler.updateItem());
-    router.get(g + "", handler.getItem());
+    router.get(g + "", handler.getItems());
     router.delete(g + "/:id", handler.deleteItem());
+    router.get(g + "/:id", handler.getItemById());
     return router;
   }
 }

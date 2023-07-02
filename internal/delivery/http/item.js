@@ -96,7 +96,7 @@ class ItemHandler extends ItemService {
     };
   }
 
-  getItem() {
+  getItems() {
     return async (req, res) => {
       try {
         //validate struct
@@ -112,7 +112,7 @@ class ItemHandler extends ItemService {
           }
         }
         //service
-        var [items, err] = await this.serviceGetItem(body);
+        var [items, err] = await this.serviceGetItems(body);
         if (err !== null) {
           switch (err) {
             case domain.itemIsNotFound:
@@ -138,8 +138,6 @@ class ItemHandler extends ItemService {
       }
     };
   }
-
-  getItemById() {}
 
   deleteItem() {
     return async (req, res) => {
@@ -168,6 +166,29 @@ class ItemHandler extends ItemService {
         }
 
         return res.status(OK).send({ message: domain.msgItemDeleteSuccess });
+      } catch (error) {
+        return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+      }
+    };
+  }
+
+  getItemById() {
+    return async (req, res) => {
+      try {
+        const item_id = req.params.id;
+
+        //service
+        var [item, err] = await this.serviceGetItemById(item_id);
+        if (err !== null) {
+          switch (err) {
+            case domain.itemIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.itemIsNotFound });
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+          }
+        }
+
+        return res.status(OK).send({ message: domain.msgItemGetSuccess, result: item });
       } catch (error) {
         return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
       }

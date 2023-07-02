@@ -7,6 +7,7 @@ const { Topics } = require("@server/lib/sequelize/topics");
 const { Genders } = require("@server/lib/sequelize/genders");
 const { Colors } = require("@server/lib/sequelize/colors");
 const { Images } = require("@server/lib/sequelize/images");
+const { Reviews } = require("@server/lib/sequelize/reviews");
 
 const { CategoriesItemsRelations } = require("@server/lib/sequelize/categoriesItemsRelations");
 const { ItemsTopicsRelations } = require("@server/lib/sequelize/itemsTopicsRelations");
@@ -102,6 +103,42 @@ class ItemRepo extends Repo {
       return [records, null];
     } catch (error) {
       log.error("Finish ITEM getItemsAndRelatedData at Repo with error", error);
+      return [null, error];
+    }
+  }
+
+  async getItemByIdAndRelatedData(tx, item_id) {
+    log.repo("Start ITEM getItemByIdAndRelatedData at Repo");
+
+    try {
+      const record = await Items.findAll(
+        {
+          distinct: true,
+          include: [
+            {
+              model: Colors,
+              attributes: ["hex_code"],
+              through: { attributes: [] },
+            },
+            {
+              model: Images,
+              attributes: ["location"],
+              through: { attributes: [] },
+            },
+            {
+              model: Reviews,
+              attributes: ["review", "rating"],
+            },
+          ],
+          where: { id: item_id },
+        },
+        { transaction: tx }
+      );
+
+      log.repo("Finish ITEM getItemByIdAndRelatedData at Repo");
+      return [record, null];
+    } catch (error) {
+      log.error("Finish ITEM getItemByIdAndRelatedData at Repo with error", error);
       return [null, error];
     }
   }
