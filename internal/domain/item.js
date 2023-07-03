@@ -43,6 +43,10 @@ const itemCreateRequest = {
     type: types.ARRAY,
     validate: ["required"],
   },
+  size_ids: {
+    type: types.ARRAY,
+    validate: ["required"],
+  },
 };
 
 const itemUpdateRequest = {
@@ -75,6 +79,10 @@ const itemUpdateRequest = {
     validate: [],
   },
   image_ids: {
+    type: types.ARRAY,
+    validate: [],
+  },
+  size_ids: {
     type: types.ARRAY,
     validate: [],
   },
@@ -130,6 +138,10 @@ const itemListRequest = {
     validate: [],
   },
   image_ids: {
+    type: types.ARRAY,
+    validate: [],
+  },
+  size_ids: {
     type: types.ARRAY,
     validate: [],
   },

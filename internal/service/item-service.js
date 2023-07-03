@@ -64,6 +64,16 @@ class ItemService extends ItemRepo {
         }
       }
 
+      for (const size_id of body.size_ids || []) {
+        var [isSizeExist, err] = await this.IS_ENTITY_EXIST(tx, this.Sizes, size_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isSizeExist) {
+          throw new Error(domain.sizeIsNotFound);
+        }
+      }
+
       //insert new item
       var [item_id, err] = await this.CREATE(tx, this.Items, body);
       if (err !== null) {
@@ -98,6 +108,13 @@ class ItemService extends ItemRepo {
       }
       for (const image_id of body.image_ids || []) {
         var [_, err] = await this.CREATE(tx, this.ItemsImagesRelations, { item_id, image_id });
+        if (err !== null) {
+          throw new Error(err);
+        }
+      }
+
+      for (const size_id of body.size_ids || []) {
+        var [_, err] = await this.CREATE(tx, this.ItemsSizesRelations, { item_id, size_id });
         if (err !== null) {
           throw new Error(err);
         }
@@ -164,6 +181,15 @@ class ItemService extends ItemRepo {
         }
         if (!isImageExist) {
           throw new Error(domain.imageIsNotFound);
+        }
+      }
+      for (const size_id of body.size_ids || []) {
+        var [isSizeExist, err] = await this.IS_ENTITY_EXIST(tx, this.Sizes, size_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isSizeExist) {
+          throw new Error(domain.sizeIsNotFound);
         }
       }
 
@@ -246,6 +272,19 @@ class ItemService extends ItemRepo {
         }
       }
 
+      if (isArray(body.size_ids)) {
+        var err = await this.DELETE_BY_WHERE(tx, this.ItemsSizesRelations, { item_id });
+        if (err !== null) {
+          throw new Error(err);
+        }
+        for (const size_id of body.size_ids) {
+          var [_, err] = await this.CREATE(tx, this.ItemsSizesRelations, { item_id, size_id });
+          if (err !== null) {
+            throw new Error(err);
+          }
+        }
+      }
+
       await tx.commit();
       log.service("Finish ITEM serviceUpdateItem Service");
       return null;
@@ -308,6 +347,15 @@ class ItemService extends ItemRepo {
         }
         if (!isImageExist) {
           throw new Error(domain.imageIsNotFound);
+        }
+      }
+      for (const size_id of body.size_ids || []) {
+        var [isSizeExist, err] = await this.IS_ENTITY_EXIST(tx, this.Sizes, size_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isSizeExist) {
+          throw new Error(domain.sizeIsNotFound);
         }
       }
 

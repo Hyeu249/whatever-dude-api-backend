@@ -8,12 +8,14 @@ const { Genders } = require("@server/lib/sequelize/genders");
 const { Colors } = require("@server/lib/sequelize/colors");
 const { Images } = require("@server/lib/sequelize/images");
 const { Reviews } = require("@server/lib/sequelize/reviews");
+const { Sizes } = require("@server/lib/sequelize/sizes");
 
 const { CategoriesItemsRelations } = require("@server/lib/sequelize/categoriesItemsRelations");
 const { ItemsTopicsRelations } = require("@server/lib/sequelize/itemsTopicsRelations");
 const { ItemsGendersRelations } = require("@server/lib/sequelize/itemsGendersRelations");
 const { ItemsColorsRelations } = require("@server/lib/sequelize/itemsColorsRelations");
 const { ItemsImagesRelations } = require("@server/lib/sequelize/itemsImagesRelations");
+const { ItemsSizesRelations } = require("@server/lib/sequelize/itemsSizesRelations");
 
 const have = (value) => Array.isArray(value) && value.length > 0;
 
@@ -26,11 +28,13 @@ class ItemRepo extends Repo {
     this.Genders = Genders;
     this.Colors = Colors;
     this.Images = Images;
+    this.Sizes = Sizes;
     this.CategoriesItemsRelations = CategoriesItemsRelations;
     this.ItemsTopicsRelations = ItemsTopicsRelations;
     this.ItemsGendersRelations = ItemsGendersRelations;
     this.ItemsColorsRelations = ItemsColorsRelations;
     this.ItemsImagesRelations = ItemsImagesRelations;
+    this.ItemsSizesRelations = ItemsSizesRelations;
   }
 
   async getItemsAndRelatedData(tx, body) {
@@ -55,6 +59,7 @@ class ItemRepo extends Repo {
     const GENDER_CONDITIONS = { id: { [Op.in]: body.gender_ids || [] } };
     const COLOR_CONDITIONS = { id: { [Op.in]: body.color_ids || [] } };
     const IMAGE_CONDITIONS = { id: { [Op.in]: body.image_ids || [] } };
+    const SIZE_CONDITIONS = { id: { [Op.in]: body.size_ids || [] } };
 
     try {
       const records = await Items.findAndCountAll(
@@ -91,6 +96,12 @@ class ItemRepo extends Repo {
               where: have(body.image_ids) && IMAGE_CONDITIONS,
               through: { attributes: [] },
             },
+            {
+              model: Sizes,
+              attributes: ["name"],
+              where: have(body.size_ids) && SIZE_CONDITIONS,
+              through: { attributes: [] },
+            },
           ],
           where: conditions,
           offset: Number(offset),
@@ -123,6 +134,11 @@ class ItemRepo extends Repo {
             {
               model: Images,
               attributes: ["location"],
+              through: { attributes: [] },
+            },
+            {
+              model: Sizes,
+              attributes: ["name"],
               through: { attributes: [] },
             },
             {

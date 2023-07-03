@@ -39,6 +39,8 @@ class ItemHandler extends ItemService {
               return res.status(NOT_FOUND).send({ message: domain.colorIsNotFound });
             case domain.imageIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
+            case domain.sizeIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.sizeIsNotFound });
             default:
               return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
           }
@@ -84,6 +86,8 @@ class ItemHandler extends ItemService {
               return res.status(NOT_FOUND).send({ message: domain.colorIsNotFound });
             case domain.imageIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
+            case domain.sizeIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.sizeIsNotFound });
             default:
               return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
           }
@@ -127,6 +131,8 @@ class ItemHandler extends ItemService {
               return res.status(NOT_FOUND).send({ message: domain.colorIsNotFound });
             case domain.imageIsNotFound:
               return res.status(NOT_FOUND).send({ message: domain.imageIsNotFound });
+            case domain.sizeIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.sizeIsNotFound });
             default:
               return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
           }
