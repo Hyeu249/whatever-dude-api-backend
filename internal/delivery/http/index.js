@@ -7,6 +7,7 @@ const ColorHandler = require("./color");
 const ReviewHandler = require("./review");
 const OrderHandler = require("./order");
 const ItemHandler = require("./item");
+const SizeHandler = require("./size");
 const multer = require("@server/lib/multer");
 const express = require("express");
 
@@ -118,6 +119,18 @@ class Http {
     router.get(g + "", handler.getItems());
     router.delete(g + "/:id", handler.deleteItem());
     router.get(g + "/:id", handler.getItemById());
+    return router;
+  }
+
+  attachSizeServiceHTTPHandler() {
+    const handler = new SizeHandler(this.db);
+    const router = new express.Router();
+    const g = "/sizes";
+
+    router.post(g + "", handler.createSize());
+    router.patch(g + "/:id", handler.updateSize());
+    router.get(g + "", handler.getSize());
+    router.delete(g + "/:id", handler.deleteSize());
     return router;
   }
 }
