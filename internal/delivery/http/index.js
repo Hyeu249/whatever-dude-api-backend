@@ -114,6 +114,7 @@ class Http {
     const router = new express.Router();
     const g = "/items";
 
+    router.get(g + "/min-max-prices", handler.getMinMaxPrices());
     router.post(g + "", handler.createItem());
     router.patch(g + "/:id", handler.updateItem());
     router.get(g + "", handler.getItems());

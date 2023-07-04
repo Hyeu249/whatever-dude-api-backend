@@ -158,6 +158,34 @@ class ItemRepo extends Repo {
       return [null, error];
     }
   }
+
+  async getMinPriceFromItem() {
+    log.repo("Start ITEM getMinPriceFromItem at Repo");
+
+    try {
+      const minPrice = await Items.min("price");
+
+      log.repo("Finish ITEM getMinPriceFromItem at Repo");
+      return [minPrice, null];
+    } catch (error) {
+      log.error("Finish ITEM getMinPriceFromItem at Repo with error", error);
+      return [null, error];
+    }
+  }
+
+  async getMaxPriceFromItem() {
+    log.repo("Start ITEM getMaxPriceFromItem at Repo");
+
+    try {
+      const maxPrice = await Items.max("price");
+
+      log.repo("Finish ITEM getMaxPriceFromItem at Repo");
+      return [maxPrice, null];
+    } catch (error) {
+      log.error("Finish ITEM getMaxPriceFromItem at Repo with error", error);
+      return [null, error];
+    }
+  }
 }
 
 module.exports = ItemRepo;

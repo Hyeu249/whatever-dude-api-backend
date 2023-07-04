@@ -200,6 +200,25 @@ class ItemHandler extends ItemService {
       }
     };
   }
+
+  getMinMaxPrices() {
+    return async (req, res) => {
+      try {
+        //service
+        var [priceRange, err] = await this.serviceGetMinMaxPrices();
+        if (err !== null) {
+          switch (err) {
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+          }
+        }
+
+        return res.status(OK).send({ message: domain.msgItemGetMinMaxPriceSuccess, result: priceRange });
+      } catch (error) {
+        return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+      }
+    };
+  }
 }
 
 module.exports = ItemHandler;

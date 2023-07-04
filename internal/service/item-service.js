@@ -451,6 +451,37 @@ class ItemService extends ItemRepo {
       return [null, parseError];
     }
   }
+
+  async serviceGetMinMaxPrices() {
+    log.service("Start ITEM serviceGetMinMaxPrices Service");
+    const db = this.db;
+    const tx = await db.transaction();
+
+    try {
+      //get priceRange
+      var [minPrice, err] = await this.getMinPriceFromItem(tx);
+      if (err !== null) {
+        throw new Error(err);
+      }
+
+      var [maxPrice, err] = await this.getMaxPriceFromItem(tx);
+      if (err !== null) {
+        throw new Error(err);
+      }
+
+      const priceRange = [minPrice, maxPrice];
+
+      await tx.commit();
+      log.service("Finish ITEM serviceGetMinMaxPrices Service");
+      return [priceRange, null];
+    } catch (error) {
+      await tx.rollback();
+      const parseError = help.parseErrorMessage(error.message);
+
+      log.error("Finish ITEM serviceGetMinMaxPrices Service with error", error);
+      return [null, parseError];
+    }
+  }
 }
 
 module.exports = ItemService;
