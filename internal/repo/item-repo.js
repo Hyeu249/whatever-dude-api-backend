@@ -39,7 +39,7 @@ class ItemRepo extends Repo {
 
   async getItemsAndRelatedData(tx, body) {
     log.repo("Start ITEM getItemsAndRelatedData at Repo");
-    let offset = 0;
+    let offset = 1;
     let limit = 20;
 
     const conditions = {};
@@ -113,8 +113,8 @@ class ItemRepo extends Repo {
             },
           ],
           where: conditions,
-          offset: Number(offset),
-          limit: Number(limit),
+          offset: (offset - 1) * limit,
+          limit: limit,
         },
         { transaction: tx }
       );
