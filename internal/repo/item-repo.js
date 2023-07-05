@@ -106,6 +106,10 @@ class ItemRepo extends Repo {
               where: have(body.size_ids) && SIZE_CONDITIONS,
               through: { attributes: [] },
             },
+            {
+              model: Reviews,
+              attributes: ["review", "rating"],
+            },
           ],
           where: conditions,
           offset: Number(offset),
