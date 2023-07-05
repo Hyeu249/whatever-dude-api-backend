@@ -135,6 +135,10 @@ const itemListRequest = {
     type: types.NUMBER,
     validate: [],
   },
+  getSale: {
+    type: types.BOOLEAN,
+    validate: [],
+  },
   category_ids: {
     type: types.ARRAY,
     validate: [],

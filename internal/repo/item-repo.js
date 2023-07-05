@@ -57,6 +57,7 @@ class ItemRepo extends Repo {
         [Op.lte]: body.price_end,
       };
     }
+    if (body.getSale === true) conditions.sale = { [Op.gte]: 1 };
 
     const CATEGORY_CONDITIONS = { id: { [Op.in]: body.category_ids || [] } };
     const TOPIC_CONDITIONS = { id: { [Op.in]: body.topic_ids || [] } };
