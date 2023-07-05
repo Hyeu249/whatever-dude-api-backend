@@ -65,6 +65,7 @@ async function server({ argv }) {
     app.use(morgan.middleware());
 
     const http = new Http(sequelizeDb);
+    app.use(...middleware);
     app.use(http.attachUserServiceHTTPHandler());
     app.use(http.attachImageServiceHTTPHandler());
     app.use(http.attachCategoryServiceHTTPHandler());
@@ -75,7 +76,6 @@ async function server({ argv }) {
     app.use(http.attachOrderServiceHTTPHandler());
     app.use(http.attachItemServiceHTTPHandler());
     app.use(http.attachSizeServiceHTTPHandler());
-    app.use(...middleware);
     //start server
     app.listen(listenPort, () => {
       log.info("Server is up on port " + listenPort);
