@@ -9,6 +9,7 @@ const { Colors } = require("@server/lib/sequelize/colors");
 const { Images } = require("@server/lib/sequelize/images");
 const { Reviews } = require("@server/lib/sequelize/reviews");
 const { Sizes } = require("@server/lib/sequelize/sizes");
+const { Users } = require("@server/lib/sequelize/users");
 
 const { CategoriesItemsRelations } = require("@server/lib/sequelize/categoriesItemsRelations");
 const { ItemsTopicsRelations } = require("@server/lib/sequelize/itemsTopicsRelations");
@@ -91,7 +92,7 @@ class ItemRepo extends Repo {
             },
             {
               model: Colors,
-              attributes: ["hex_code"],
+              attributes: ["name", "hex_code"],
               where: have(body.color_ids) && COLOR_CONDITIONS,
               through: { attributes: [] },
             },
@@ -137,7 +138,7 @@ class ItemRepo extends Repo {
           include: [
             {
               model: Colors,
-              attributes: ["hex_code"],
+              attributes: ["name", "hex_code"],
               through: { attributes: [] },
             },
             {
@@ -152,7 +153,8 @@ class ItemRepo extends Repo {
             },
             {
               model: Reviews,
-              attributes: ["review", "rating"],
+              attributes: ["created_at", "review", "rating"],
+              include: [{ model: Users, attributes: ["email"] }],
             },
           ],
           where: { id: item_id },
