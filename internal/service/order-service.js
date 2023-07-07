@@ -112,7 +112,7 @@ class OrderService extends OrderRepo {
       }
 
       //get orders
-      var [orders, err] = await this.getOrdersAndRelatedData(tx, this.Orders, body);
+      var [orders, err] = await this.getOrdersAndRelatedData(tx, body);
       if (err !== null) {
         throw new Error(err);
       }
