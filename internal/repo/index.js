@@ -98,15 +98,15 @@ class Repo {
   }
 
   async IS_ENTITY_EXIST(tx, entity, id) {
-    log.repo("Start CHECK Entity at Repo");
+    log.repo("Start CHECK IS_ENTITY_EXIST at Repo");
 
     try {
       const count = await entity.count({ where: { id } }, { transaction: tx });
 
-      log.repo("Finish CHECK Entity at Repo");
+      log.repo("Finish CHECK IS_ENTITY_EXIST at Repo");
       return [count > 0, null];
     } catch (error) {
-      log.error("Finish CHECK Entity at Repo with error", error);
+      log.error("Finish CHECK IS_ENTITY_EXIST at Repo with error", error);
       return [null, error];
     }
   }
