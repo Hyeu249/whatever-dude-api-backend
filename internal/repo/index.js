@@ -15,6 +15,20 @@ class Repo {
     }
   }
 
+  async BULK_CREATE(tx, entity, body) {
+    log.repo("Start BULK_CREATE Entity at Repo");
+
+    try {
+      const _ = await entity.bulkCreate(body, { transaction: tx });
+
+      log.repo("Finish BULK_CREATE Entity at Repo");
+      return null;
+    } catch (error) {
+      log.error("Finish BULK_CREATE Entity at Repo with error", error);
+      return error;
+    }
+  }
+
   async UPDATE(tx, entity, body, id) {
     log.repo("Start UPDATE Entity at Repo");
 

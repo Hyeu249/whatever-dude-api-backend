@@ -16,7 +16,7 @@ class OrderRepo extends Repo {
   }
 
   async getOrdersAndRelatedData(tx) {
-    log.repo("Start ITEM getOrdersAndRelatedData at Repo");
+    log.repo("Start ORDER getOrdersAndRelatedData at Repo");
 
     try {
       const records = await Orders.findAndCountAll(
@@ -44,16 +44,16 @@ class OrderRepo extends Repo {
         { transaction: tx }
       );
 
-      log.repo("Finish ITEM getOrdersAndRelatedData at Repo");
+      log.repo("Finish ORDER getOrdersAndRelatedData at Repo");
       return [records, null];
     } catch (error) {
-      log.error("Finish ITEM getOrdersAndRelatedData at Repo with error", error);
+      log.error("Finish ORDER getOrdersAndRelatedData at Repo with error", error);
       return [null, error];
     }
   }
 
   async getOrderByIdAndRelatedData(tx, order_id) {
-    log.repo("Start ITEM getOrderByIdAndRelatedData at Repo");
+    log.repo("Start ORDER getOrderByIdAndRelatedData at Repo");
 
     try {
       const record = await Orders.findAll(
@@ -81,10 +81,10 @@ class OrderRepo extends Repo {
         { transaction: tx }
       );
 
-      log.repo("Finish ITEM getOrderByIdAndRelatedData at Repo");
+      log.repo("Finish ORDER getOrderByIdAndRelatedData at Repo");
       return [record, null];
     } catch (error) {
-      log.error("Finish ITEM getOrderByIdAndRelatedData at Repo with error", error);
+      log.error("Finish ORDER getOrderByIdAndRelatedData at Repo with error", error);
       return [null, error];
     }
   }
