@@ -27,7 +27,27 @@ class OrderService extends OrderRepo {
         body.user_id = user_id;
       }
 
-      var [id, err] = await this.CREATE(tx, this.Orders, body);
+      var [order_id, err] = await this.CREATE(tx, this.Orders, body);
+      if (err !== null) {
+        throw new Error(err);
+      }
+
+      var [id, err] = await this.CREATE(tx, this.OrdersAndRelatedInfos, {
+        order_id,
+        item_id: "289c3795-ce65-4860-9260-2b928241fd26",
+        color: "black",
+        size: "XS",
+        quantity: 2,
+      });
+
+      var [id, err] = await this.CREATE(tx, this.OrdersAndRelatedInfos, {
+        order_id,
+        item_id: "289c3795-ce65-4860-9260-2b928241fd26",
+        color: "white",
+        size: "S",
+        quantity: 5,
+      });
+
       if (err !== null) {
         throw new Error(err);
       }
