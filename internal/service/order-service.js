@@ -32,7 +32,7 @@ class OrderService extends OrderRepo {
         throw new Error(err);
       }
 
-      var [id, err] = await this.CREATE(tx, this.OrdersAndRelatedInfos, {
+      var [id, err] = await this.BULK_CREATE(tx, this.OrdersAndRelatedInfos, {
         order_id,
         item_id: "6611b577-2828-4947-a048-bff09fa35a00",
         color_id: "09a5298b-5c51-461c-9841-5d921c9e3ffb",
