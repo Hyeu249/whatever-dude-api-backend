@@ -29,6 +29,8 @@ class OrderHandler extends OrderService {
         var err = await this.serviceCreateOrder(body, req.user_id);
         if (err !== null) {
           switch (err) {
+            case domain.userIsNotFound:
+              return res.status(NOT_FOUND).send({ message: domain.userIsNotFound });
             default:
               return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
           }

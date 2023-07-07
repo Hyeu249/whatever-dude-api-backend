@@ -2,6 +2,7 @@ const OrderRepo = require("../repo/order-repo");
 const log = require("@server/lib/log");
 const help = require("@server/lib/help");
 const domain = require("@server/internal/domain");
+const { cloneDeep } = require("lodash");
 
 class OrderService extends OrderRepo {
   constructor(db) {
@@ -27,20 +28,14 @@ class OrderService extends OrderRepo {
         body.user_id = user_id;
       }
 
-      var [order_id, err] = await this.CREATE(tx, this.Orders, body);
+      const orderBody = objectExcept(body, "related_infos");
+      var [order_id, err] = await this.CREATE(tx, this.Orders, orderBody);
       if (err !== null) {
         throw new Error(err);
       }
 
-      var err = await this.BULK_CREATE(tx, this.OrdersAndRelatedInfos, [
-        {
-          order_id,
-          item_id: "0fa6922c-1161-47a8-801e-bae349c3cc81",
-          color_id: "15cd6e9a-950a-47be-aa63-66cd2bd84cb3",
-          size_id: "7bce018b-7cf3-4fb0-8a87-2c39d11e1424",
-          quantity: 2,
-        },
-      ]);
+      const relatedInfosBody = body.related_infos.map((e) => ({ ...e, order_id }));
+      var err = await this.BULK_CREATE(tx, this.OrdersAndRelatedInfos, relatedInfosBody);
 
       if (err !== null) {
         throw new Error(err);
@@ -169,3 +164,21 @@ class OrderService extends OrderRepo {
 }
 
 module.exports = OrderService;
+
+function objectExcept(obj, field = []) {
+  const newObj = cloneDeep(obj);
+  let fields;
+  if (Array.isArray(field)) {
+    fields = field;
+  } else {
+    fields = [field];
+  }
+
+  for (const field of fields) {
+    if (newObj.hasOwnProperty(field)) {
+      delete newObj[field];
+    }
+  }
+
+  return newObj;
+}

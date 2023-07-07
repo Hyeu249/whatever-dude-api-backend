@@ -26,6 +26,10 @@ const orderCreateRequest = {
     type: types.STRING,
     validate: [],
   },
+  related_infos: {
+    type: types.ARRAY,
+    validate: ["required"],
+  },
 };
 
 const orderUpdateRequest = {
