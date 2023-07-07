@@ -22,7 +22,6 @@ class OrderRepo extends Repo {
       const records = await Orders.findAndCountAll(
         {
           distinct: true,
-          attributes: ["id", "name", "phone", "address"],
           include: [
             {
               model: OrdersAndRelatedInfos,
@@ -30,7 +29,7 @@ class OrderRepo extends Repo {
               include: [
                 {
                   model: Items,
-                  attributes: ["id", "name", "price"],
+                  attributes: ["id", "name", "price", "sale"],
                 },
                 {
                   model: Colors,
@@ -48,43 +47,6 @@ class OrderRepo extends Repo {
       return [records, null];
     } catch (error) {
       log.error("Finish ORDER getOrdersAndRelatedData at Repo with error", error);
-      return [null, error];
-    }
-  }
-
-  async getOrderByIdAndRelatedData(tx, order_id) {
-    log.repo("Start ORDER getOrderByIdAndRelatedData at Repo");
-
-    try {
-      const record = await Orders.findAll(
-        {
-          distinct: true,
-          include: [
-            {
-              model: OrdersAndRelatedInfos,
-              attributes: ["quantity"],
-              include: [
-                {
-                  model: Items,
-                  attributes: ["id", "name", "price"],
-                },
-                {
-                  model: Colors,
-                  attributes: ["name", "hex_code"],
-                },
-                { model: Sizes, attributes: ["name"] },
-              ],
-            },
-          ],
-          where: { id: order_id },
-        },
-        { transaction: tx }
-      );
-
-      log.repo("Finish ORDER getOrderByIdAndRelatedData at Repo");
-      return [record, null];
-    } catch (error) {
-      log.error("Finish ORDER getOrderByIdAndRelatedData at Repo with error", error);
       return [null, error];
     }
   }

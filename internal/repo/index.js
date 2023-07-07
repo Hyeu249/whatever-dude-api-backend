@@ -17,6 +17,8 @@ class Repo {
 
   async BULK_CREATE(tx, entity, bodyArray) {
     log.repo("Start BULK_CREATE Entity at Repo");
+    const NOT_ARRAY = !Array.isArray(bodyArray);
+    if (NOT_ARRAY) throw new Error("bodyArray must be an array");
 
     try {
       const _ = await entity.bulkCreate(bodyArray, { transaction: tx });

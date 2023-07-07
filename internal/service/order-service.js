@@ -32,13 +32,15 @@ class OrderService extends OrderRepo {
         throw new Error(err);
       }
 
-      var [id, err] = await this.BULK_CREATE(tx, this.OrdersAndRelatedInfos, {
-        order_id,
-        item_id: "6611b577-2828-4947-a048-bff09fa35a00",
-        color_id: "09a5298b-5c51-461c-9841-5d921c9e3ffb",
-        size_id: "185bd40b-16a9-4606-933d-bbb3cf76c7ca",
-        quantity: 2,
-      });
+      var err = await this.BULK_CREATE(tx, this.OrdersAndRelatedInfos, [
+        {
+          order_id,
+          item_id: "0fa6922c-1161-47a8-801e-bae349c3cc81",
+          color_id: "15cd6e9a-950a-47be-aa63-66cd2bd84cb3",
+          size_id: "7bce018b-7cf3-4fb0-8a87-2c39d11e1424",
+          quantity: 2,
+        },
+      ]);
 
       if (err !== null) {
         throw new Error(err);
