@@ -67,6 +67,26 @@ class OrderRepo extends Repo {
       return [null, error];
     }
   }
+
+  async getPriceByItemID(tx, item_id) {
+    log.repo("Start ORDER getPriceByItemID at Repo");
+
+    try {
+      const item = await Items.findOne(
+        {
+          attributes: ["price", "sale"],
+          where: { id: item_id },
+        },
+        { transaction: tx }
+      );
+
+      log.repo("Finish ORDER getPriceByItemID at Repo");
+      return [item, null];
+    } catch (error) {
+      log.error("Finish ORDER getPriceByItemID at Repo with error", error);
+      return [null, error];
+    }
+  }
 }
 
 module.exports = OrderRepo;

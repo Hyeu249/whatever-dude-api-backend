@@ -29,16 +29,37 @@ class OrderService extends OrderRepo {
       }
 
       const orderBody = objectExcept(body, "related_infos");
+      const infos = cloneDeep(body.related_infos);
+      let totalPrice = 0;
+
+      for (const info of infos) {
+        var [item, err] = await this.getPriceByItemID(tx, info.item_id);
+        if (err !== null) {
+          throw new Error(err);
+        }
+        if (!isNumber(info.quantity) || info.quantity < 1) throw new Error("Error quantity is less than 1");
+        totalPrice += calcSalePrice(item.price, item.sale) * info.quantity;
+      }
+
+      orderBody.total = totalPrice;
+
       var [order_id, err] = await this.CREATE(tx, this.Orders, orderBody);
       if (err !== null) {
         throw new Error(err);
       }
 
-      const relatedInfosBody = body.related_infos.map((e) => ({ ...e, order_id }));
-      var err = await this.BULK_CREATE(tx, this.OrdersAndRelatedInfos, relatedInfosBody);
+      for (const info of infos) {
+        var [order_id, err] = await this.CREATE(tx, this.OrdersAndRelatedInfos, {
+          order_id: order_id,
+          item_id: info.item_id,
+          color_id: info.color_id,
+          size_id: info.size_id,
+          quantity: info.quantity,
+        });
 
-      if (err !== null) {
-        throw new Error(err);
+        if (err !== null) {
+          throw new Error(err);
+        }
       }
 
       await tx.commit();
@@ -181,4 +202,18 @@ function objectExcept(obj, field = []) {
   }
 
   return newObj;
+}
+
+function isNumber(value) {
+  return typeof value === "number" && !isNaN(value);
+}
+
+function calcSalePrice(price, discount) {
+  console.log("price: ", price);
+  console.log("discount: ", discount);
+  if (!isNumber(discount)) return price;
+  if (!discount) price;
+
+  const salePrice = price - (price * discount) / 100;
+  return salePrice;
 }
