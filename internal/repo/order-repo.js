@@ -15,8 +15,22 @@ class OrderRepo extends Repo {
     this.OrdersAndRelatedInfos = OrdersAndRelatedInfos;
   }
 
-  async getOrdersAndRelatedData(tx) {
+  async getOrdersAndRelatedData(tx, body) {
     log.repo("Start ORDER getOrdersAndRelatedData at Repo");
+    let offset = 1;
+    let limit = 20;
+
+    const conditions = {};
+    //exact condition
+    if (body.offset !== undefined) offset = body.offset;
+    if (body.limit !== undefined) limit = body.limit;
+
+    if (body.id !== undefined) conditions.id = body.id;
+    if (body.name !== undefined) conditions.name = body.name;
+    if (body.phone !== undefined) conditions.phone = body.phone;
+    if (body.address !== undefined) conditions.address = body.address;
+    if (body.note !== undefined) conditions.note = body.note;
+    if (body.status !== undefined) conditions.status = body.status;
 
     try {
       const records = await Orders.findAndCountAll(
@@ -39,6 +53,9 @@ class OrderRepo extends Repo {
               ],
             },
           ],
+          where: conditions,
+          offset: (offset - 1) * limit,
+          limit: limit,
         },
         { transaction: tx }
       );

@@ -80,6 +80,10 @@ const orderListRequest = {
     type: types.STRING,
     validate: [],
   },
+  status: {
+    type: types.STRING,
+    validate: [],
+  },
 };
 
 const orderDeleteRequest = {
