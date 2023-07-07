@@ -209,8 +209,6 @@ function isNumber(value) {
 }
 
 function calcSalePrice(price, discount) {
-  console.log("price: ", price);
-  console.log("discount: ", discount);
   if (!isNumber(discount)) return price;
   if (!discount) price;
 
