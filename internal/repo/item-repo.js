@@ -92,7 +92,7 @@ class ItemRepo extends Repo {
             },
             {
               model: Colors,
-              attributes: ["name", "hex_code"],
+              attributes: ["id", "name", "hex_code"],
               where: have(body.color_ids) && COLOR_CONDITIONS,
               through: { attributes: [] },
             },
@@ -104,7 +104,7 @@ class ItemRepo extends Repo {
             },
             {
               model: Sizes,
-              attributes: ["name"],
+              attributes: ["id", "name"],
               where: have(body.size_ids) && SIZE_CONDITIONS,
               through: { attributes: [] },
             },
@@ -138,7 +138,7 @@ class ItemRepo extends Repo {
           include: [
             {
               model: Colors,
-              attributes: ["name", "hex_code"],
+              attributes: ["id", "name", "hex_code"],
               through: { attributes: [] },
             },
             {
@@ -148,7 +148,7 @@ class ItemRepo extends Repo {
             },
             {
               model: Sizes,
-              attributes: ["name"],
+              attributes: ["id", "name"],
               through: { attributes: [] },
             },
             {

@@ -28,17 +28,17 @@ class OrderService extends OrderRepo {
         body.user_id = user_id;
       }
 
-      const orderBody = objectExcept(body, "related_infos");
-      const infos = cloneDeep(body.related_infos);
+      const orderBody = objectExcept(body, "order_details");
+      const order_details = cloneDeep(body.order_details);
       let totalPrice = 0;
 
-      for (const info of infos) {
-        var [item, err] = await this.getPriceByItemID(tx, info.item_id);
+      for (const detail of order_details) {
+        var [item, err] = await this.getPriceByItemID(tx, detail.item_id);
         if (err !== null) {
           throw new Error(err);
         }
-        if (!isNumber(info.quantity) || info.quantity < 1) throw new Error("Error quantity is less than 1");
-        totalPrice += calcSalePrice(item.price, item.sale) * info.quantity;
+        if (!isNumber(detail.quantity) || detail.quantity < 1) throw new Error("Error quantity is less than 1");
+        totalPrice += calcSalePrice(item.price, item.sale) * detail.quantity;
       }
 
       orderBody.total = totalPrice;
@@ -48,13 +48,13 @@ class OrderService extends OrderRepo {
         throw new Error(err);
       }
 
-      for (const info of infos) {
+      for (const detail of order_details) {
         var [order_id, err] = await this.CREATE(tx, this.OrdersAndRelatedInfos, {
           order_id: order_id,
-          item_id: info.item_id,
-          color_id: info.color_id,
-          size_id: info.size_id,
-          quantity: info.quantity,
+          item_id: detail.item_id,
+          color_id: detail.color_id,
+          size_id: detail.size_id,
+          quantity: detail.quantity,
         });
 
         if (err !== null) {
