@@ -49,7 +49,7 @@ class OrderService extends OrderRepo {
       }
 
       for (const detail of order_details) {
-        var [order_id, err] = await this.CREATE(tx, this.OrdersAndRelatedInfos, {
+        var [_, err] = await this.CREATE(tx, this.OrdersAndRelatedInfos, {
           order_id: order_id,
           item_id: detail.item_id,
           color_id: detail.color_id,

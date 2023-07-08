@@ -21,7 +21,7 @@ class Http {
     const router = new express.Router();
     const g = "/users";
 
-    router.post(g + "", handler.register());
+    router.post(g + "/register", handler.register());
     return router;
   }
 

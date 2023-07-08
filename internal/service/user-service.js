@@ -24,7 +24,8 @@ class UserService extends UserRepo {
       }
 
       //insert new user
-      [id, err] = await this.CREATE(tx, this.Users, body);
+      var [id, err] = await this.CREATE(tx, this.Users, body);
+
       if (err !== null) {
         throw new Error(err);
       }
