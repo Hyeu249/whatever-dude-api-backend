@@ -10,6 +10,8 @@ const { Images } = require("@server/lib/sequelize/images");
 const { Reviews } = require("@server/lib/sequelize/reviews");
 const { Sizes } = require("@server/lib/sequelize/sizes");
 const { Users } = require("@server/lib/sequelize/users");
+const { Orders } = require("@server/lib/sequelize/orders");
+const { OrdersAndRelatedInfos } = require("@server/lib/sequelize/ordersAndRelatedInfos");
 
 const { CategoriesItemsRelations } = require("@server/lib/sequelize/categoriesItemsRelations");
 const { ItemsTopicsRelations } = require("@server/lib/sequelize/itemsTopicsRelations");
@@ -36,6 +38,7 @@ class ItemRepo extends Repo {
     this.ItemsColorsRelations = ItemsColorsRelations;
     this.ItemsImagesRelations = ItemsImagesRelations;
     this.ItemsSizesRelations = ItemsSizesRelations;
+    this.OrdersAndRelatedInfos = OrdersAndRelatedInfos;
   }
 
   async getItemsAndRelatedData(tx, body) {
@@ -197,6 +200,77 @@ class ItemRepo extends Repo {
       return [null, error];
     }
   }
+
+  async getBestSellerAndRelatedData(tx) {
+    log.repo("Start ITEM getBestSellerAndRelatedData at Repo");
+    let offset = 1;
+    let limit = 10;
+
+    const [currentDate, preDay] = nowAndPreviousDay(30);
+
+    try {
+      const records = await Items.findAll(
+        {
+          distinct: true,
+          include: [
+            {
+              model: OrdersAndRelatedInfos,
+              attributes: [],
+              include: [
+                {
+                  model: Orders,
+                  attributes: [],
+                  where: {
+                    created_at: {
+                      [Op.between]: [preDay, currentDate],
+                    },
+                  },
+                },
+              ],
+            },
+            {
+              model: Colors,
+              attributes: ["id", "name", "hex_code"],
+              through: { attributes: [] },
+            },
+            {
+              model: Images,
+              attributes: ["location"],
+              through: { attributes: [] },
+            },
+            {
+              model: Sizes,
+              attributes: ["id", "name"],
+              through: { attributes: [] },
+            },
+            {
+              model: Reviews,
+              attributes: ["review", "rating"],
+            },
+          ],
+          offset: (offset - 1) * limit,
+          limit: limit,
+        },
+        { transaction: tx }
+      );
+
+      log.repo("Finish ITEM getBestSellerAndRelatedData at Repo");
+      return [records, null];
+    } catch (error) {
+      log.error("Finish ITEM getBestSellerAndRelatedData at Repo with error", error);
+      return [null, error];
+    }
+  }
 }
 
 module.exports = ItemRepo;
+
+function nowAndPreviousDay(preDay = 1) {
+  const currentDate = new Date();
+  const dayPrior = new Date();
+  dayPrior.setDate(dayPrior.getDate() - preDay);
+  currentDate.setHours(23, 59, 0, 0);
+  dayPrior.setHours(0, 0, 0, 0);
+
+  return [currentDate, dayPrior];
+}

@@ -8,6 +8,7 @@ const domains = {
   msgItemGetSuccess: "Get item successfully.",
 
   msgItemGetMinMaxPriceSuccess: "Get min max price item successfully.",
+  msgItemBestSellerSuccess: "Get items best seller successfully.",
 
   itemIsNotFound: "Item is not found.",
 };

@@ -478,6 +478,30 @@ class ItemService extends ItemRepo {
       return [null, parseError];
     }
   }
+
+  async serviceGetBestSeller() {
+    log.service("Start ITEM serviceGetBestSeller Service");
+    const db = this.db;
+    const tx = await db.transaction();
+
+    try {
+      //get items
+      var [items, err] = await this.getBestSellerAndRelatedData(tx);
+      if (err !== null) {
+        throw new Error(err);
+      }
+
+      await tx.commit();
+      log.service("Finish ITEM serviceGetBestSeller Service");
+      return [items, null];
+    } catch (error) {
+      await tx.rollback();
+      const parseError = help.parseErrorMessage(error.message);
+
+      log.error("Finish ITEM serviceGetBestSeller Service with error", error);
+      return [null, parseError];
+    }
+  }
 }
 
 module.exports = ItemService;

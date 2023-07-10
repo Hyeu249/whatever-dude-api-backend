@@ -219,6 +219,25 @@ class ItemHandler extends ItemService {
       }
     };
   }
+
+  getBestSeller() {
+    return async (req, res) => {
+      try {
+        //service
+        var [items, err] = await this.serviceGetBestSeller();
+        if (err !== null) {
+          switch (err) {
+            default:
+              return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+          }
+        }
+
+        return res.status(OK).send({ message: domain.msgItemBestSellerSuccess, result: items });
+      } catch (error) {
+        return res.status(INTERNAL_SERVER_ERROR).send({ message: domain.internalServerError });
+      }
+    };
+  }
 }
 
 module.exports = ItemHandler;
