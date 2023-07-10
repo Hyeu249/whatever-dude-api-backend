@@ -132,7 +132,7 @@ class ItemRepo extends Repo {
     log.repo("Start ITEM getItemByIdAndRelatedData at Repo");
 
     try {
-      const record = await Items.findAll(
+      const record = await Items.findOne(
         {
           distinct: true,
           include: [
