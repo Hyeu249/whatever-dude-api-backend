@@ -205,37 +205,40 @@ class ItemRepo extends Repo {
     let limit = 10;
 
     try {
-      const records = await Items.findAll({
-        distinct: true,
-        include: [
-          {
-            model: OrdersAndRelatedInfos,
-            attributes: [],
-          },
-          {
-            model: Colors,
-            attributes: ["id", "name", "hex_code"],
-            through: { attributes: [] },
-          },
-          {
-            model: Images,
-            attributes: ["location"],
-            through: { attributes: [] },
-          },
-          {
-            model: Sizes,
-            attributes: ["id", "name"],
-            through: { attributes: [] },
-          },
-          {
-            model: Reviews,
-            attributes: ["created_at", "review", "rating"],
-            include: [{ model: Users, attributes: ["email"] }],
-          },
-        ],
-        order: [[OrdersAndRelatedInfos, "quantity", "DESC"]],
-        limit: limit,
-      });
+      const records = await Items.findAll(
+        {
+          distinct: true,
+          include: [
+            {
+              model: OrdersAndRelatedInfos,
+              attributes: [],
+            },
+            {
+              model: Colors,
+              attributes: ["id", "name", "hex_code"],
+              through: { attributes: [] },
+            },
+            {
+              model: Images,
+              attributes: ["location"],
+              through: { attributes: [] },
+            },
+            {
+              model: Sizes,
+              attributes: ["id", "name"],
+              through: { attributes: [] },
+            },
+            {
+              model: Reviews,
+              attributes: ["created_at", "review", "rating"],
+              include: [{ model: Users, attributes: ["email"] }],
+            },
+          ],
+          order: [[OrdersAndRelatedInfos, "quantity", "DESC"]],
+          limit: limit,
+        },
+        { transaction: tx }
+      );
 
       log.repo("Finish ITEM getBestSellerAndRelatedData at Repo");
       return [records, null];
