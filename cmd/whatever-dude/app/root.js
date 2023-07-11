@@ -29,7 +29,7 @@ const app = {
       .option("db-database", yargs.persistentFlags().stringVar("DB database. E.g. test_db"))
       .option("db-protocol", yargs.persistentFlags().stringVar("DB protocol. E.g. tcp", "tcp"))
 
-      .option("debug", yargs.persistentFlags().boolVarP("Enable debug mode.", "d"))
+      .option("debug", yargs.persistentFlags().boolVarP("Enable debug mode.", "d", true))
       .parse();
   },
 };
@@ -40,12 +40,20 @@ async function server({ argv }) {
   //declare
   const { dbType, dbUsername, dbPassword, dbDatabase, dbProtocol, dbHost, dbPort, debug, listenPort } = argv;
 
+  const PORT = process.env.PORT || listenPort;
+  const DB_TYPE = process.env.DB_TYPE || dbType;
+  const DB_USER = process.env.DB_USER || dbUsername;
+  const DB_PASSWORD = process.env.DB_PASSWORD || dbPassword;
+  const DB_HOST = process.env.DB_HOST || dbHost;
+  const DB_NAME = process.env.DB_NAME || dbDatabase;
+  const DB_PORT = process.env.DB_PORT || dbHost;
+
   try {
     if (debug) {
       log.setLevel(log.DebugLevel);
     }
     //start db
-    var [sequelizeDb, err] = await sequelize.open(dbType, [dbUsername, dbPassword, dbProtocol, dbHost, dbPort, dbDatabase]);
+    var [sequelizeDb, err] = await sequelize.open(DB_TYPE, [DB_USER, DB_PASSWORD, dbProtocol, DB_HOST, DB_PORT, DB_NAME]);
     if (err !== null) {
       throw new Error(err);
     }
@@ -77,8 +85,8 @@ async function server({ argv }) {
     app.use(http.attachItemServiceHTTPHandler());
     app.use(http.attachSizeServiceHTTPHandler());
     //start server
-    app.listen(listenPort, () => {
-      log.info("Server is up on port " + listenPort);
+    app.listen(PORT, () => {
+      log.info("Server is up on port " + PORT);
     });
 
     // const closeDb = await sequelizeDb.close();
