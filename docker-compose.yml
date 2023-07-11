@@ -1,23 +1,24 @@
 version: "3"
 services:
-  mysql-db:
-    image: mysql:5.7
+  project-db:
+    image: mariadb:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: test
-      MYSQL_DATABASE: cool-school-db
+      MARIADB_ROOT_PASSWORD: test
+      MARIADB_DATABASE: cool-school-db
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/docker-entrypoint-initdb.d/
     networks:
       - cool-school
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    restart: always
     ports:
       - 8081:80
     depends_on:
-      - mysql-db
+      - project-db
     links:
-      - mysql-db:db
+      - project-db:db
     networks:
       - cool-school
   backend:
@@ -30,13 +31,13 @@ services:
     environment:
       - PORT=8080
       - DB_TYPE=mysql
-      - DB_HOST=mysql-db
+      - DB_HOST=project-db
       - DB_PORT=3306
       - DB_USER=root
       - DB_PASSWORD=test
       - DB_NAME=cool-school-db
     depends_on:
-      - mysql-db
+      - project-db
     networks:
       - cool-school
     command: npm start serve
