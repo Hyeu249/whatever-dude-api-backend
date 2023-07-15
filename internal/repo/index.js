@@ -1,4 +1,5 @@
 const log = require("@server/lib/log");
+const { cloneDeep } = require("lodash");
 
 class Repo {
   async CREATE(tx, entity, body) {
@@ -60,7 +61,9 @@ class Repo {
     if (body.offset !== undefined) offset = body.offset;
     if (body.limit !== undefined) limit = body.limit;
 
-    for (const [key, value] of Object.entries(body)) {
+    const newBody = removeFields(body, ["offset", "limit"]);
+
+    for (const [key, value] of Object.entries(newBody)) {
       if (value === undefined) continue;
       conditions[key] = value;
     }
@@ -128,3 +131,11 @@ class Repo {
 }
 
 module.exports = Repo;
+
+function removeFields(body, fields = []) {
+  const newBody = cloneDeep(body);
+  for (const field of fields) {
+    delete newBody[field];
+  }
+  return newBody;
+}
