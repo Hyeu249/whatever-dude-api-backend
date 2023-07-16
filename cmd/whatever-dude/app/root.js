@@ -10,9 +10,9 @@ const Http = require("../../../internal/delivery/http");
 const https = require("https");
 const fs = require("fs");
 
-const ca_bundle_path = path.join(__dirname, "ssl", "ca_bundle.crt");
-const cert_path = path.join(__dirname, "ssl", "certificate.crt");
-const key_path = path.join(__dirname, "ssl", "private.key");
+const ca_bundle_path = path.join(__dirname, "cert2", "ca_bundle.crt");
+const cert_path = path.join(__dirname, "cert2", "certificate.crt");
+const key_path = path.join(__dirname, "cert2", "private.key");
 
 const options = {
   ca: fs.readFileSync(ca_bundle_path),
