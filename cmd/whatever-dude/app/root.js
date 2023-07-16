@@ -7,6 +7,18 @@ const log = require("@server/lib/log");
 const sequelize = require("@server/lib/sequelize");
 const middleware = require("@server/lib/middleware");
 const Http = require("../../../internal/delivery/http");
+const https = require("https");
+const fs = require("fs");
+
+const ca_bundle_path = path.join(__dirname, "ssl", "ca_bundle.crt");
+const cert_path = path.join(__dirname, "ssl", "certificate.crt");
+const key_path = path.join(__dirname, "ssl", "private.key");
+
+const options = {
+  ca: fs.readFileSync(ca_bundle_path),
+  cert: fs.readFileSync(cert_path),
+  key: fs.readFileSync(key_path),
+};
 
 const version = require("./version");
 version.use("1.0.0");
@@ -84,8 +96,11 @@ async function server({ argv }) {
     app.use(http.attachOrderServiceHTTPHandler());
     app.use(http.attachItemServiceHTTPHandler());
     app.use(http.attachSizeServiceHTTPHandler());
+
     //start server
-    app.listen(PORT, () => {
+    const server = https.createServer(options, app);
+
+    server.listen(PORT, () => {
       log.info("Server is up on port " + PORT);
     });
 
